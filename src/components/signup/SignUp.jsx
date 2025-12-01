@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import './signUp.css';
+import './SignUp.css';
 import Modal from "../modal/Modal";
 import ForgotPassword from "../forgotPassword/ForgotPassword";
 import axios from 'axios';
