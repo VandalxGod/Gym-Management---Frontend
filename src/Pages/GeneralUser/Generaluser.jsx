@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
-import MemberCard from "../../components/MemberCard/MemberCard";
+import MemberCard from "../../components/memberCard/MemberCard";
 
 import {
     getMonthlyJoined,
