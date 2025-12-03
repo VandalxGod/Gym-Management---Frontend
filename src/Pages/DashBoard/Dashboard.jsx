@@ -14,19 +14,9 @@ import PersonOffIcon from "@mui/icons-material/PersonOff";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-/*
-  Enhanced Dashboard.jsx
-  - Uses your working endpoints to compute counts
-  - Shows friendly loading state (no nulls)
-  - Clean, professional styling
-  - Cards kept functionally identical (only styling improved)
-  - No changes to routing or existing logic
-*/
-
 export default function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  // Stats
   const [totalMembers, setTotalMembers] = useState(null);
   const [activeMembers, setActiveMembers] = useState(null);
   const [expiredMembers, setExpiredMembers] = useState(null);
@@ -41,31 +31,35 @@ export default function Dashboard() {
     async function fetchStats() {
       setLoadingStats(true);
       try {
-        // 1) total members from your existing endpoint (returns totalMembers)
+        // Updated URLs here ⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇
+        const BASE_URL = "https://gym-management-backend-og62.onrender.com";
+
         const allResp = await axios.get(
-          "http://localhost:4000/members/all-member?skip=0&limit=1",
+          `${BASE_URL}/members/all-member?skip=0&limit=1`,
           { withCredentials: true }
         );
 
-        // 2) expired members list endpoint (count length)
         const expiredResp = await axios.get(
-          "http://localhost:4000/members/expired-member",
+          `${BASE_URL}/members/expired-member`,
           { withCredentials: true }
         );
 
-        // 3) inactive or active endpoint (your earlier code used 'inactive-member')
-        // We can use inactive-member endpoint and derive active = total - inactive - expired (if needed).
         const inactiveResp = await axios.get(
-          "http://localhost:4000/members/inactive-member",
+          `${BASE_URL}/members/inactive-member`,
           { withCredentials: true }
         );
 
-        // Defensive checks (in case backend returns different shapes)
-        const total = allResp?.data?.totalMembers ?? (Array.isArray(allResp?.data?.members) ? allResp.data.members.length : null);
-        const expiredCount = Array.isArray(expiredResp?.data?.members) ? expiredResp.data.members.length : (expiredResp?.data?.totalMembers ?? 0);
-        const inactiveCount = Array.isArray(inactiveResp?.data?.members) ? inactiveResp.data.members.length : (inactiveResp?.data?.totalMembers ?? 0);
+        const total = allResp?.data?.totalMembers ??
+          (Array.isArray(allResp?.data?.members) ? allResp.data.members.length : null);
 
-        // Compute active as total - inactive - expired (only if total is known)
+        const expiredCount = Array.isArray(expiredResp?.data?.members)
+          ? expiredResp.data.members.length
+          : (expiredResp?.data?.totalMembers ?? 0);
+
+        const inactiveCount = Array.isArray(inactiveResp?.data?.members)
+          ? inactiveResp.data.members.length
+          : (inactiveResp?.data?.totalMembers ?? 0);
+
         let activeCount = null;
         if (typeof total === "number") {
           activeCount = Math.max(0, total - inactiveCount - expiredCount);
@@ -78,7 +72,6 @@ export default function Dashboard() {
         }
       } catch (err) {
         console.error("Error fetching dashboard stats:", err);
-        // fallback to zero to avoid nulls
         if (mounted) {
           setTotalMembers(0);
           setExpiredMembers(0);
@@ -95,21 +88,17 @@ export default function Dashboard() {
     };
   }, []);
 
-  // small helper to show loading placeholder
   const renderStat = (value) => (loadingStats ? "—" : value ?? 0);
 
   return (
     <div className="flex h-screen w-full bg-[#f5f5f7]">
-      {/* SIDEBAR */}
       <div className={`transition-all duration-300 ${isSidebarOpen ? "w-64" : "w-0"} overflow-hidden`}>
         <Sidebar />
       </div>
 
-      {/* MAIN CONTENT */}
       <div className="flex-1 flex flex-col">
         <Header isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 
-        {/* TOP STATS (clean & professional row) */}
         <div className="px-8 mt-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
@@ -137,7 +126,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* MAIN CARDS */}
         <main className="flex-1 p-8 overflow-y-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
@@ -202,7 +190,6 @@ export default function Dashboard() {
   );
 }
 
-/* ---------------- Top stat small tile ---------------- */
 function TopStat({ label, value, icon, tone = "neutral" }) {
   const toneBg =
     tone === "green" ? "bg-emerald-50" : tone === "red" ? "bg-red-50" : "bg-white";
@@ -223,7 +210,6 @@ function TopStat({ label, value, icon, tone = "neutral" }) {
   );
 }
 
-/* ---------------- Dashboard card (clean pro) ---------------- */
 function DashboardCard({ to, onClick, title, subtitle, accent, icon }) {
   return (
     <Link
