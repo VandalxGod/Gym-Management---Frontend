@@ -1,7 +1,7 @@
 import React from "react";
 // import Home from "./Home.css";
 import Login from "../../components/login/Login.jsx";
-import Signup from "../../components/Signup/Signup";
+import Signup from "../../components/Signup/Signup.jsx";
 
 
 

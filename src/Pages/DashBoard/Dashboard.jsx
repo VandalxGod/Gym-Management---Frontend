@@ -1,6 +1,6 @@
 // src/Pages/DashBoard/Dashboard.jsx
 import React, { useEffect, useState } from "react";
-import Sidebar from "../../components/sidebar/Sidebar";
+import Sidebar from "../../components/sidebar/Sidebar.jsx";
 import Header from "./Header";
 import Footer from "./Footer";
 

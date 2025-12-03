@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 // Layout
-import Sidebar from "../../components/sidebar/Sidebar";
-import MemberCard from "../../components/MemberCard/MemberCard";
-import Modal from "../../components/modal/Modal";
-import Addmembership from "../../components/Addmembership/Addmembership";
-import AddMembers from "../../components/AddMembers/AddMembers";
+import Sidebar from "../../components/sidebar/Sidebar.jsx";
+import MemberCard from "../../components/MemberCard/MemberCard.jsx";
+import Modal from "../../components/modal/Modal.jsx";
+import Addmembership from "../../components/Addmembership/Addmembership.jsx";
+import AddMembers from "../../components/AddMembers/AddMembers.jsx";
 
 // Icons
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
