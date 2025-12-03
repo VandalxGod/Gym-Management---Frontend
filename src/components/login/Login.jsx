@@ -14,7 +14,7 @@ export default function Login() {
         // sessionStorage.setItem("isLogin", "true");
         // navigate('/dashboard'); 
 
-        await axios.post("http://localhost:4000/auth/login",loginField,{withCredentials:true}).then((response)=>{
+        await axios.post("https://gym-management-backend-og62.onrender.com/auth/login",loginField,{withCredentials:true}).then((response)=>{
             console.log(response.data);
             localStorage.setItem('gymName',response.data.gym.gymName);
             localStorage.setItem('gymPic',response.data.gym.profilePic);

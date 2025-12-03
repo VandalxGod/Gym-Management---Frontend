@@ -50,7 +50,7 @@ export default function Signup() {
 
 
     const handleRegister = async () => {
-        await axios.post("http://localhost:4000/auth/register", InputField).then((resp) => {
+        await axios.post("https://gym-management-backend-og62.onrender.com/auth/register", InputField).then((resp) => {
             // console.log(resp)
             const successMessage = resp.data.message;
             toast.success(successMessage);

@@ -12,7 +12,7 @@ export default function Addmembership({handleClose}) {
     }
 
     const fetchMembership = async () => {
-        await axios.get("http://localhost:4000/plans/get-membership", { withCredentials: true }).then((res) => {
+        await axios.get("https://gym-management-backend-og62.onrender.com/get-membership", { withCredentials: true }).then((res) => {
             console.log(res)
             setMembership(res.data.membership);
             toast.success(res.data.membership.length + "Membership Fetched")
@@ -29,7 +29,7 @@ export default function Addmembership({handleClose}) {
 
 
     const handleAddmembership = async ()=>{
-        await axios.post("http://localhost:4000/plans/add-membership",InputField, { withCredentials: true }).then((res) => {
+        await axios.post("https://gym-management-backend-og62.onrender.com/plans/add-membership",InputField, { withCredentials: true }).then((res) => {
             // console.log(res)
             toast.success(res.data.message);
             handleClose();

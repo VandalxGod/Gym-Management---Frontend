@@ -27,7 +27,7 @@ export default function Memberdetail() {
     }, [])
 
     const fetchMembership = async () => {
-        axios.get("http://localhost:4000/plans/get-membership", { withCredentials: true }).then((response) => {
+        axios.get("https://gym-management-backend-og62.onrender.com/plans/get-membership", { withCredentials: true }).then((response) => {
             setMembership(response.data.membership);
             setPlanMember(response.data.membership[0]._id);
         }).catch(err => {
@@ -37,7 +37,7 @@ export default function Memberdetail() {
     }
 
     const fetchData = async () => {
-        await axios.get(`http://localhost:4000/members/get-member/${id}`, { withCredentials: true }).then((response) => {
+        await axios.get(`https://gym-management-backend-og62.onrender.com/members/get-member/${id}`, { withCredentials: true }).then((response) => {
             console.log(response);
             setData(response.data.member);
             setStatus(response.data.member.status);
@@ -51,7 +51,7 @@ export default function Memberdetail() {
 
     const handleSwitchBtn = async() => {
         let statuss = status === "Active" ? "Pending" : "Active";
-        await axios.post(`http://localhost:4000/members/change-status/${id}`,{status:statuss}, {withCredentials: true}).then((response)=> {
+        await axios.post(`https://gym-management-backend-og62.onrender.com/members/change-status/${id}`,{status:statuss}, {withCredentials: true}).then((response)=> {
             toast.success("Status Changed ")
 
         }).catch(err =>{
@@ -76,7 +76,7 @@ export default function Memberdetail() {
     }
     // console.log(planMember);
     const handleRenewSaveBtn = async()=>{
-        await axios.put(`http://localhost:4000/members/update-member-plan/${id}`,{membership:planMember},{withCredentials:true}).then((response)=>{
+        await axios.put(`https://gym-management-backend-og62.onrender.com/members/update-member-plan/${id}`,{membership:planMember},{withCredentials:true}).then((response)=>{
             setData(response.data.member);
             toast.success(response.data.message);
         }).catch(err => {

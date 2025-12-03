@@ -47,7 +47,7 @@ export default function Member() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:4000/members/all-member?skip=${skipValue}&limit=${limits}`,
+        `https://gym-management-backend-og62.onrender.com/members/all-member?skip=${skipValue}&limit=${limits}`,
         { withCredentials: true }
       );
 
@@ -112,7 +112,7 @@ export default function Member() {
 
     try {
       const response = await axios.get(
-        `http://localhost:4000/members/searched-member?searchTerm=${search}`,
+        `https://gym-management-backend-og62.onrender.com/members/searched-member?searchTerm=${search}`,
         { withCredentials: true }
       );
 

@@ -27,7 +27,7 @@ export default function ForgotPassword() {
     }
     const changePassword = async () => {
         setLoader(true);
-        await axios.post("http://localhost:4000/auth/reset-password",{email:InputField.email, newPassword:InputField.newPassword}).then((response) => {
+        await axios.post("https://gym-management-backend-og62.onrender.com/auth/reset-password",{email:InputField.email, newPassword:InputField.newPassword}).then((response) => {
             toast.success(response.data.message);
             setLoader(false);
         }).catch(err => {
@@ -41,7 +41,7 @@ export default function ForgotPassword() {
 
     const verifyOtp = async () => {
         setLoader(true);
-        await axios.post("http://localhost:4000/auth/reset-password/checkOtp", { email:InputField.email, otp:InputField.otp }).then((response) => {
+        await axios.post("https://gym-management-backend-og62.onrender.com/auth/reset-password/checkOtp", { email:InputField.email, otp:InputField.otp }).then((response) => {
             setOtpValidate(true);
             setContentValue("Submit Your Password");
             toast.success(response.data.message);
@@ -57,7 +57,7 @@ export default function ForgotPassword() {
     }
     const sendOtp = async () => {
         setLoader(true);
-        await axios.post("http://localhost:4000/auth/reset-password/sendOtp", { email: InputField.email }).then((response) => {
+        await axios.post("https://gym-management-backend-og62.onrender.com/reset-password/sendOtp", { email: InputField.email }).then((response) => {
             setEmailSumbit(true);
             setContentValue("Submit Your OTP");
             toast.success(response.data.message);

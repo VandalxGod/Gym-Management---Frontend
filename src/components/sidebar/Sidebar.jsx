@@ -50,7 +50,7 @@ export default function Sidebar() {
 
       // 2️⃣ Update DB
       await axios.put(
-        "http://localhost:4000/auth/update-profile-pic",
+        "https://gym-management-backend-og62.onrender.com/auth/update-profile-pic",
         { profilePic: imageUrl },
         { withCredentials: true }
       );
