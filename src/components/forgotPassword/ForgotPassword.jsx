@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Loader from "../Loader/loader";
 import axios from "axios";
 import { toast, ToastContainer } from 'react-toastify';
-import { set } from "mongoose";
+
 
 export default function ForgotPassword() {
     const [emailSubmit, setEmailSumbit] = useState(false);
