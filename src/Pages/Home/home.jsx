@@ -1,69 +1,50 @@
 import React from "react";
-<<<<<<< HEAD
 import Login from "../../components/login/Login.jsx";
 import Signup from "../../components/Signup/Signup.jsx";
 import ParticleBackground from "../../components/ParticleBackground/ParticleBackground.jsx";
-// import './Home.css';
+import "./Home.css";
 
 export default function Home() {
-    return (
-        <div className="w-full h-[100vh] relative overflow-hidden bg-black">
-            
-            <ParticleBackground />  {/* 🔥 Animated background */}
+  return (
+    <div className="w-full min-h-screen relative overflow-hidden bg-black">
+      {/* Animated Particle Background */}
+      <ParticleBackground />
 
-            <div className="
-    relative z-10 
-    w-full
-    py-4 px-8 
-    backdrop-blur-xl 
-    bg-white/5 
-    border-b border-white/20 
-    text-white 
-    text-2xl font-semibold 
-    tracking-wide
-    
-">
-    Yeah Buddy
-</div>
+      {/* Top Bar */}
+      <div
+        className="
+          relative z-10
+          w-full
+          py-3 sm:py-4 px-4 sm:px-8
+          backdrop-blur-xl
+          bg-white/5
+          border-b border-white/20
+          text-white
+          text-xl sm:text-2xl
+          font-semibold
+          tracking-wide
+          text-center sm:text-left
+        "
+      >
+        Yeah Buddy
+      </div>
 
-
-            <div className="Bgphoto relative z-10">
-                <div className="w-full lg:flex gap-39">
-                    <Login />
-                    <Signup />
-                </div>
-            </div>
-
+      {/* Main Content */}
+      <div className="Bgphoto relative z-10 flex items-center">
+        <div
+          className="
+            w-full
+            flex flex-col lg:flex-row
+            items-center
+            justify-center
+            gap-8 lg:gap-16
+            px-4 sm:px-8
+          "
+        >
+          <Login />
+          <Signup />
         </div>
-    );
+      </div>
+    </div>
+  );
 }
-=======
-// import Home from "./Home.css";
-import Login from "../../components/login/Login.jsx";
-import Signup from "../../components/Signup/Signup.jsx";
-
-
-
-
-
-export default function Home(){
-    return(
-        <div className="w-full h-[100vh] ">
-            <div className="border-2 border-zinc-200 bg-zinc-200 text-black p-5 font-semibold text-x1"> 
-                Yeah Buddy
-            </div>
-            <div className="Bgphoto">
-                <div className="w-full lg:flex gap-39"> {/* when larg screen when we use lg this is use for responsivenes */}
-
-                <Login />
-                <Signup/>
-
-
-
-                </div>
-            </div>
-        </div>
-    )
-
-}
->>>>>>> 98be98cfc67761beb7eed0fe7e2bb331a7911c38

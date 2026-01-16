@@ -47,11 +47,7 @@ export default function Member() {
     setLoading(true);
     try {
       const response = await axios.get(
-<<<<<<< HEAD
         `http://localhost:4000/members/all-member?skip=${skipValue}&limit=${limits}`,
-=======
-        `https://gym-management-backend-og62.onrender.com/members/all-member?skip=${skipValue}&limit=${limits}`,
->>>>>>> 98be98cfc67761beb7eed0fe7e2bb331a7911c38
         { withCredentials: true }
       );
 
@@ -116,11 +112,7 @@ export default function Member() {
 
     try {
       const response = await axios.get(
-<<<<<<< HEAD
         `http://localhost:4000/members/searched-member?searchTerm=${search}`,
-=======
-        `https://gym-management-backend-og62.onrender.com/members/searched-member?searchTerm=${search}`,
->>>>>>> 98be98cfc67761beb7eed0fe7e2bb331a7911c38
         { withCredentials: true }
       );
 
@@ -138,19 +130,16 @@ export default function Member() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
-
-      {/* Sidebar FIXED (matching Dashboard) */}
-      <div className="w-64 h-full">
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Sidebar */}
+      <div className="hidden md:block w-64 h-full">
         <Sidebar />
       </div>
 
       {/* MAIN CONTENT */}
-      <main className="flex-1 p-10 overflow-auto">
-
+      <main className="flex-1 p-4 sm:p-6 md:p-10 overflow-auto">
         {/* Top Header */}
-        <div className="flex items-center justify-between mb-10">
-
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           {/* Left Section */}
           <div className="flex items-center gap-4">
             <Link
@@ -161,16 +150,16 @@ export default function Member() {
               Back
             </Link>
 
-            <h1 className="text-4xl font-semibold text-gray-800 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-800 tracking-tight">
               Members
             </h1>
           </div>
 
           {/* Right Buttons */}
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={() => setAddmember(true)}
-              className="bg-white border border-gray-300 px-5 py-2 rounded-xl shadow-sm hover:shadow transition flex items-center gap-2"
+              className="bg-white border border-gray-300 px-4 py-2 rounded-xl shadow-sm hover:shadow transition flex items-center gap-2"
             >
               <AddIcon className="text-gray-600" />
               <span className="text-gray-700 font-medium">Add Member</span>
@@ -178,7 +167,7 @@ export default function Member() {
 
             <button
               onClick={() => setAddmembership(true)}
-              className="bg-black text-white px-5 py-2 rounded-xl shadow-md hover:opacity-90 transition flex items-center gap-2"
+              className="bg-black text-white px-4 py-2 rounded-xl shadow-md hover:opacity-90 transition flex items-center gap-2"
             >
               <FitnessCenterIcon />
               Membership
@@ -187,7 +176,7 @@ export default function Member() {
         </div>
 
         {/* Search Bar */}
-        <div className="flex items-center gap-3 w-full md:w-1/2 mb-6">
+        <div className="flex items-center gap-3 w-full sm:w-3/4 md:w-1/2 mb-6">
           <input
             type="text"
             value={search}
@@ -204,7 +193,7 @@ export default function Member() {
         </div>
 
         {/* Pagination / Count */}
-        <div className="flex justify-between items-center text-gray-500 text-sm mb-4">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 text-gray-500 text-sm mb-4">
           <div>Total Members: {totalData}</div>
 
           {!isSearchModeOn && (
@@ -241,13 +230,15 @@ export default function Member() {
         </div>
 
         {/* Member Cards */}
-        <div className="bg-white rounded-2xl shadow-sm p-8 min-h-[60vh]">
+        <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 md:p-8 min-h-[60vh]">
           {loading ? (
             <div className="text-center text-gray-500 py-20">Loading…</div>
           ) : data.length === 0 ? (
-            <div className="text-center text-gray-500 py-20">No Members Found</div>
+            <div className="text-center text-gray-500 py-20">
+              No Members Found
+            </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {data.map((member) => (
                 <MemberCard key={member._id} item={member} />
               ))}

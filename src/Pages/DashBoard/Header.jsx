@@ -17,27 +17,31 @@ export default function Header({ isSidebarOpen, setIsSidebarOpen }) {
   }, [gymPic]);
 
   return (
-    <header className="w-full bg-white shadow-md border-b px-6 py-4 
-                       flex items-center justify-between sticky top-0 z-10">
-
-      {/* LEFT SECTION: Menu Button + Title */}
-      <div className="flex items-center gap-4">
+    <header
+      className="w-full bg-white shadow-md border-b 
+                 px-4 sm:px-6 py-3 sm:py-4
+                 flex items-center justify-between 
+                 sticky top-0 z-10"
+    >
+      {/* LEFT SECTION */}
+      <div className="flex items-center gap-3 sm:gap-4">
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           className="p-2 rounded-lg hover:bg-gray-200 transition"
         >
-          <MenuIcon sx={{ fontSize: 28 }} />
+          <MenuIcon sx={{ fontSize: 26 }} />
         </button>
 
-        <h1 className="text-2xl font-semibold tracking-wide text-gray-900">
+        <h1 className="text-xl sm:text-2xl font-semibold tracking-wide text-gray-900">
           Dashboard
         </h1>
       </div>
 
-      {/* RIGHT SECTION: Profile Image */}
+      {/* RIGHT SECTION */}
       <img
         src={gymPic}
-        className="w-11 h-11 rounded-full border border-gray-300 object-cover 
+        className="w-9 h-9 sm:w-11 sm:h-11 rounded-full 
+                   border border-gray-300 object-cover 
                    shadow-sm hover:scale-105 transition"
         alt="profile"
       />

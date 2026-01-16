@@ -41,7 +41,7 @@ export default function Footer() {
     "Pain is weakness leaving the body.",
     "Work hard in silence; let success make the noise.",
     "Discipline is choosing what you want most.",
-    "Commit to be fit."
+    "Commit to be fit.",
   ];
 
   const marqueeText = quotes
@@ -49,30 +49,37 @@ export default function Footer() {
     .join("   ✦   ");
 
   return (
-    <footer className="w-full bg-white border-t shadow-inner py-4 overflow-hidden relative h-[48px] flex items-center">
+    <footer className="w-full bg-white border-t shadow-inner py-2 sm:py-4 
+                       overflow-hidden relative h-[44px] sm:h-[48px] 
+                       flex items-center">
 
-      {/* Subtle background soft-light effect */}
+      {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-r from-white via-[#f9f9f9] to-white opacity-90"></div>
 
       {/* Layer 1 */}
       <div
-        className="absolute whitespace-nowrap text-gray-800 text-sm font-medium
-        animate-superSmoothSlow bg-clip-text text-transparent bg-gradient-to-r from-black to-gray-600"
+        className="absolute whitespace-nowrap text-gray-800 
+                   text-xs sm:text-sm font-medium
+                   animate-superSmoothSlow
+                   bg-clip-text text-transparent 
+                   bg-gradient-to-r from-black to-gray-600"
       >
         {marqueeText}
       </div>
 
       {/* Layer 2 */}
       <div
-        className="absolute whitespace-nowrap text-gray-800 text-sm font-medium
-        animate-superSmoothSlow2 bg-clip-text text-transparent bg-gradient-to-r from-black to-gray-600"
+        className="absolute whitespace-nowrap text-gray-800 
+                   text-xs sm:text-sm font-medium
+                   animate-superSmoothSlow2
+                   bg-clip-text text-transparent 
+                   bg-gradient-to-r from-black to-gray-600"
       >
         {marqueeText}
       </div>
 
       <style>
         {`
-          /* Ultra slow scrolling — 180 seconds */
           .animate-superSmoothSlow {
             animation: superSmoothSlow 180s linear infinite;
           }

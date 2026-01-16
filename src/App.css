@@ -1,25 +1,23 @@
-.App{
+.App {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Global Bgphoto — NO IMAGE */
 .Bgphoto {
-  justify-content: center;
   display: flex;
+  justify-content: center;
+  position: relative;
   top: 0;
   left: 0;
-<<<<<<< HEAD
-  /* background-repeat: no-repeat; */
-  /* overflow: hidden; */
-  background-size: cover;
-  /* background-image: url('./assets/Discipline.jpeg'); */
-=======
+
+  /* REMOVE IMAGE COMPLETELY */
+  background-image: none !important;
   background-repeat: no-repeat;
-  /* overflow: hidden; */
   background-size: cover;
-  background-image: url('./assets/Discipline.jpeg');
->>>>>>> 98be98cfc67761beb7eed0fe7e2bb331a7911c38
-  height: 100vh;
-  
+  background-position: center;
+
+  min-height: 100vh;
+
 }

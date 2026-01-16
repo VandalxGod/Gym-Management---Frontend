@@ -31,7 +31,7 @@ export default function Sidebar() {
     navigate("/");
   };
 
-  // ⭐ Upload Image + Save Permanently in DB
+  // Upload Image + Save Permanently in DB
   const uploadImage = async (event) => {
     setLoading(true);
 
@@ -40,7 +40,7 @@ export default function Sidebar() {
     data.append("upload_preset", "gym-management");
 
     try {
-      // 1️⃣ Upload to Cloudinary
+      // Upload to Cloudinary
       const cloud = await axios.post(
         "https://api.cloudinary.com/v1_1/dgsfifvhy/image/upload",
         data
@@ -48,18 +48,14 @@ export default function Sidebar() {
 
       const imageUrl = cloud.data.secure_url;
 
-      // 2️⃣ Update DB
+      // Update DB
       await axios.put(
-<<<<<<< HEAD
         "http://localhost:4000/auth/update-profile-pic",
-=======
-        "https://gym-management-backend-og62.onrender.com/auth/update-profile-pic",
->>>>>>> 98be98cfc67761beb7eed0fe7e2bb331a7911c38
         { profilePic: imageUrl },
         { withCredentials: true }
       );
 
-      // 3️⃣ Save Locally
+      // Save Locally
       localStorage.setItem("gymPic", imageUrl);
       setProfilePic(imageUrl);
 
@@ -80,10 +76,11 @@ export default function Sidebar() {
   return (
     <aside
       className="
-        h-screen w-64 flex flex-col
+        h-screen w-full sm:w-64
+        flex flex-col
         bg-gradient-to-b from-black via-zinc-900 to-black
         border-r border-white/10 shadow-xl
-        text-white p-6
+        text-white p-4 sm:p-6
         backdrop-blur-2xl
       "
     >
@@ -91,7 +88,7 @@ export default function Sidebar() {
       <div className="flex flex-col items-center gap-4">
         {/* Gym Image */}
         <div className="relative group">
-          <div className="w-28 h-28 rounded-2xl overflow-hidden shadow-2xl">
+          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden shadow-2xl">
             <img
               src={profilePic}
               className="w-full h-full object-cover"
@@ -119,7 +116,7 @@ export default function Sidebar() {
         </div>
 
         {/* Gym Name */}
-        <h1 className="text-2xl font-bold text-center tracking-wide">
+        <h1 className="text-xl sm:text-2xl font-bold text-center tracking-wide">
           {localStorage.getItem("gymName")}
         </h1>
 
@@ -147,7 +144,9 @@ export default function Sidebar() {
                 }`}
             >
               <span className="text-xl">{item.icon}</span>
-              <span className="text-lg tracking-wide">{item.label}</span>
+              <span className="text-base sm:text-lg tracking-wide">
+                {item.label}
+              </span>
             </Link>
           );
         })}
@@ -160,7 +159,8 @@ export default function Sidebar() {
       <button
         onClick={handleLogout}
         className="
-          flex items-center gap-3 w-full px-4 py-3 rounded-xl 
+          flex items-center justify-center sm:justify-start gap-3
+          w-full px-4 py-3 rounded-xl 
           bg-red-600 hover:bg-red-700 transition font-semibold shadow-lg
         "
       >
