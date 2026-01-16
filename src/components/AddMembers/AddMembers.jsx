@@ -46,7 +46,11 @@ export default function AddMembers() {
     }
 
     const fetchMembership = async () => {
+<<<<<<< HEAD
         await axios.get("http://localhost:4000/plans/get-membership", { withCredentials: true }).then((response) => {
+=======
+        await axios.get("https://gym-management-backend-og62.onrender.com/plans/get-membership", { withCredentials: true }).then((response) => {
+>>>>>>> 98be98cfc67761beb7eed0fe7e2bb331a7911c38
 
 
             setMembershipList(response.data.membership);
@@ -80,7 +84,11 @@ export default function AddMembers() {
 
 
     const handleRegisterButton = async () => {
+<<<<<<< HEAD
         await axios.post("http://localhost:4000/members/register-member", InputField, { withCredentials: true }).then((res) => {
+=======
+        await axios.post("https://gym-management-backend-og62.onrender.com/members/register-member", InputField, { withCredentials: true }).then((res) => {
+>>>>>>> 98be98cfc67761beb7eed0fe7e2bb331a7911c38
             toast.success("Added Successfully");
             setTimeout(() => {
                 window.location.reload();

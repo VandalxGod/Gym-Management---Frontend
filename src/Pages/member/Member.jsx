@@ -47,7 +47,11 @@ export default function Member() {
     setLoading(true);
     try {
       const response = await axios.get(
+<<<<<<< HEAD
         `http://localhost:4000/members/all-member?skip=${skipValue}&limit=${limits}`,
+=======
+        `https://gym-management-backend-og62.onrender.com/members/all-member?skip=${skipValue}&limit=${limits}`,
+>>>>>>> 98be98cfc67761beb7eed0fe7e2bb331a7911c38
         { withCredentials: true }
       );
 
@@ -112,7 +116,11 @@ export default function Member() {
 
     try {
       const response = await axios.get(
+<<<<<<< HEAD
         `http://localhost:4000/members/searched-member?searchTerm=${search}`,
+=======
+        `https://gym-management-backend-og62.onrender.com/members/searched-member?searchTerm=${search}`,
+>>>>>>> 98be98cfc67761beb7eed0fe7e2bb331a7911c38
         { withCredentials: true }
       );
 

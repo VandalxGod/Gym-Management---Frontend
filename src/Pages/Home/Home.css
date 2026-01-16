@@ -1,4 +1,5 @@
 .Bgphoto {
+<<<<<<< HEAD
     width: 100%;
     height: 100vh;
     background: #000;   /* black background */
@@ -7,3 +8,17 @@
     position: relative;
     overflow: hidden;
 }
+=======
+    justify-content: center;
+    display: flex;
+    top: 0;
+    left: 0;
+    background-repeat: no-repeat;
+    /* overflow: hidden; */
+    background-size: cover;
+    background-image: url('..//..//src/assets/Discipline.jpeg');
+    height: 100vh;
+    
+  }
+  
+>>>>>>> 98be98cfc67761beb7eed0fe7e2bb331a7911c38

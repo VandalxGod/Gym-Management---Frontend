@@ -27,7 +27,11 @@ export default function Memberdetail() {
     }, [])
 
     const fetchMembership = async () => {
+<<<<<<< HEAD
         axios.get("http://localhost:4000/plans/get-membership", { withCredentials: true }).then((response) => {
+=======
+        axios.get("https://gym-management-backend-og62.onrender.com/plans/get-membership", { withCredentials: true }).then((response) => {
+>>>>>>> 98be98cfc67761beb7eed0fe7e2bb331a7911c38
             setMembership(response.data.membership);
             setPlanMember(response.data.membership[0]._id);
         }).catch(err => {
@@ -37,7 +41,11 @@ export default function Memberdetail() {
     }
 
     const fetchData = async () => {
+<<<<<<< HEAD
         await axios.get(`http://localhost:4000/members/get-member/${id}`, { withCredentials: true }).then((response) => {
+=======
+        await axios.get(`https://gym-management-backend-og62.onrender.com/members/get-member/${id}`, { withCredentials: true }).then((response) => {
+>>>>>>> 98be98cfc67761beb7eed0fe7e2bb331a7911c38
             console.log(response);
             setData(response.data.member);
             setStatus(response.data.member.status);
@@ -51,7 +59,11 @@ export default function Memberdetail() {
 
     const handleSwitchBtn = async() => {
         let statuss = status === "Active" ? "Pending" : "Active";
+<<<<<<< HEAD
         await axios.post(`http://localhost:4000/members/change-status/${id}`,{status:statuss}, {withCredentials: true}).then((response)=> {
+=======
+        await axios.post(`https://gym-management-backend-og62.onrender.com/members/change-status/${id}`,{status:statuss}, {withCredentials: true}).then((response)=> {
+>>>>>>> 98be98cfc67761beb7eed0fe7e2bb331a7911c38
             toast.success("Status Changed ")
 
         }).catch(err =>{
@@ -76,7 +88,11 @@ export default function Memberdetail() {
     }
     // console.log(planMember);
     const handleRenewSaveBtn = async()=>{
+<<<<<<< HEAD
         await axios.put(`http://localhost:4000/members/update-member-plan/${id}`,{membership:planMember},{withCredentials:true}).then((response)=>{
+=======
+        await axios.put(`https://gym-management-backend-og62.onrender.com/members/update-member-plan/${id}`,{membership:planMember},{withCredentials:true}).then((response)=>{
+>>>>>>> 98be98cfc67761beb7eed0fe7e2bb331a7911c38
             setData(response.data.member);
             toast.success(response.data.message);
         }).catch(err => {
