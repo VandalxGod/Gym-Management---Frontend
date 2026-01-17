@@ -15,9 +15,14 @@ export default function Sidebar() {
   const location = useLocation();
 
   const [greeting, setGreeting] = useState("");
-  const [profilePic, setProfilePic] = useState(localStorage.getItem("gymPic"));
+  const [profilePic, setProfilePic] = useState(
+    localStorage.getItem("gymPic")
+  );
   const [loading, setLoading] = useState(false);
 
+  /* =========================
+     GREETING LOGIC
+  ========================= */
   useEffect(() => {
     const hour = new Date().getHours();
     if (hour < 12) setGreeting("Good Morning");
@@ -26,12 +31,23 @@ export default function Sidebar() {
     else setGreeting("Good Night");
   }, []);
 
+  /* =========================
+     LOGOUT
+  ========================= */
   const handleLogout = () => {
-    localStorage.clear();
+    localStorage.removeItem("token");
+    localStorage.removeItem("gymName");
+    localStorage.removeItem("gymPic");
+    localStorage.removeItem("isLogin");
     navigate("/");
   };
 
+  /* =========================
+     PROFILE IMAGE UPLOAD
+  ========================= */
   const uploadImage = async (event) => {
+    if (!event.target.files[0]) return;
+
     setLoading(true);
 
     const data = new FormData();
@@ -43,21 +59,20 @@ export default function Sidebar() {
         "https://api.cloudinary.com/v1_1/dgsfifvhy/image/upload",
         { method: "POST", body: data }
       );
-      const result = await cloud.json();
 
-      const imageUrl = result.secure_url;
+      const result = await cloud.json();
+      if (!result.secure_url) throw new Error("Upload failed");
 
       await api.put("/auth/update-profile-pic", {
-        profilePic: imageUrl,
+        profilePic: result.secure_url,
       });
 
-      localStorage.setItem("gymPic", imageUrl);
-      setProfilePic(imageUrl);
-
-      toast.success("Profile Updated!");
+      localStorage.setItem("gymPic", result.secure_url);
+      setProfilePic(result.secure_url);
+      toast.success("Profile updated");
     } catch (err) {
-      console.log(err);
-      toast.error("Upload Failed");
+      console.error(err);
+      toast.error("Upload failed");
     } finally {
       setLoading(false);
     }
@@ -71,14 +86,17 @@ export default function Sidebar() {
   return (
     <aside
       className="
-        h-screen w-full sm:w-64
+        fixed top-0 left-0 bottom-0
+        w-full sm:w-64
         flex flex-col
         bg-gradient-to-b from-black via-zinc-900 to-black
         border-r border-white/10 shadow-xl
         text-white p-4 sm:p-6
         backdrop-blur-2xl
+        z-40
       "
     >
+      {/* ================= HEADER ================= */}
       <div className="flex flex-col items-center gap-4">
         <div className="relative group">
           <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden shadow-2xl">
@@ -100,15 +118,16 @@ export default function Sidebar() {
             htmlFor="uploadBtn"
             className="
               absolute -bottom-3 left-1/2 -translate-x-1/2
-              bg-white text-black text-xs px-3 py-1 rounded-full 
-              opacity-0 group-hover:opacity-100 transition-all shadow-md cursor-pointer
+              bg-white text-black text-xs px-3 py-1 rounded-full
+              opacity-0 group-hover:opacity-100 transition
+              shadow-md cursor-pointer
             "
           >
             {loading ? "..." : "Change"}
           </label>
         </div>
 
-        <h1 className="text-xl sm:text-2xl font-bold text-center tracking-wide">
+        <h1 className="text-xl sm:text-2xl font-bold text-center">
           {localStorage.getItem("gymName")}
         </h1>
 
@@ -117,7 +136,8 @@ export default function Sidebar() {
 
       <div className="h-px bg-white/10 my-6"></div>
 
-      <nav className="flex flex-col gap-3">
+      {/* ================= NAV ================= */}
+      <nav className="flex flex-col gap-3 flex-1 overflow-y-auto">
         {navItems.map((item) => {
           const active = location.pathname === item.to;
 
@@ -125,34 +145,32 @@ export default function Sidebar() {
             <Link
               key={item.to}
               to={item.to}
-              className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-all shadow-sm
+              className={`flex items-center gap-4 px-4 py-3 rounded-xl transition
                 ${
                   active
-                    ? "bg-white text-black shadow-xl font-semibold"
+                    ? "bg-white text-black font-semibold"
                     : "text-zinc-300 hover:bg-white/10 hover:text-white"
                 }`}
             >
               <span className="text-xl">{item.icon}</span>
-              <span className="text-base sm:text-lg tracking-wide">
-                {item.label}
-              </span>
+              <span>{item.label}</span>
             </Link>
           );
         })}
       </nav>
 
-      <div className="flex-1"></div>
-
+      {/* ================= LOGOUT ================= */}
       <button
         onClick={handleLogout}
         className="
-          flex items-center justify-center sm:justify-start gap-3
-          w-full px-4 py-3 rounded-xl 
-          bg-red-600 hover:bg-red-700 transition font-semibold shadow-lg
+          mt-4 flex items-center gap-3
+          w-full px-4 py-3 rounded-xl
+          bg-red-600 hover:bg-red-700 transition
+          font-semibold
         "
       >
         <LogoutIcon />
-        <span>Logout</span>
+        Logout
       </button>
     </aside>
   );

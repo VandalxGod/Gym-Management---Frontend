@@ -11,19 +11,29 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-const handleLogin = async () => {
-  try {
-    const response = await api.post("/auth/login", loginField);
+  const handleLogin = async () => {
+    if (!loginField.userName || !loginField.password) {
+      return toast.error("All fields are required");
+    }
 
-    localStorage.setItem("gymName", response.data.gym.gymName);
-    localStorage.setItem("gymPic", response.data.gym.profilePic);
-    localStorage.setItem("isLogin", "true");
+    try {
+      const response = await api.post("/auth/login", loginField);
 
-    navigate("/dashboard");
-  } catch (err) {
-    toast.error(err.response?.data?.error || "Login failed");
-  }
-};
+      // 🔐 SAVE TOKEN
+      localStorage.setItem("token", response.data.token);
+
+      // UI data
+      localStorage.setItem("gymName", response.data.gym.gymName);
+      localStorage.setItem("gymPic", response.data.gym.profilePic);
+      localStorage.setItem("isLogin", "true");
+
+      toast.success("Login successful");
+
+      navigate("/dashboard");
+    } catch (err) {
+      toast.error(err.response?.data?.error || "Login failed");
+    }
+  };
 
   const handleOnChange = (event, name) => {
     setLoginField({ ...loginField, [name]: event.target.value });

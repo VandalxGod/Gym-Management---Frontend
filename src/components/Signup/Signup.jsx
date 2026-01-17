@@ -20,22 +20,25 @@ export default function Signup() {
   });
 
   const [forgotPassword, setForgotPassword] = useState(false);
-  const [loaderImage, setLoaderimage] = useState(false);
+  const [loaderImage, setLoaderImage] = useState(false);
   const [registering, setRegistering] = useState(false);
 
   const handleClose = () => {
     setForgotPassword((prev) => !prev);
   };
 
-  const handleOnchange = (event, name) => {
+  const handleOnChange = (event, name) => {
     setInputField({ ...InputField, [name]: event.target.value });
   };
 
-  // 🔹 Upload image to Cloudinary
+  /* =========================
+     UPLOAD IMAGE (CLOUDINARY)
+  ========================= */
   const uploadImage = async (event) => {
     if (!event.target.files[0]) return;
 
-    setLoaderimage(true);
+    setLoaderImage(true);
+
     const data = new FormData();
     data.append("file", event.target.files[0]);
     data.append("upload_preset", "gym-management");
@@ -48,7 +51,13 @@ export default function Signup() {
           body: data,
         }
       );
+
       const result = await response.json();
+
+      if (!result.secure_url) {
+        throw new Error("Image upload failed");
+      }
+
       setInputField((prev) => ({
         ...prev,
         profilePic: result.secure_url,
@@ -57,15 +66,17 @@ export default function Signup() {
       console.error(err);
       toast.error("Image upload failed");
     } finally {
-      setLoaderimage(false);
+      setLoaderImage(false);
     }
   };
 
-  // 🔹 Register Gym
+  /* =========================
+     REGISTER GYM
+  ========================= */
   const handleRegister = async () => {
     const { email, gymName, userName, password, profilePic } = InputField;
 
-    // Frontend validation
+    // Basic validation
     if (!email || !gymName || !userName || !password || !profilePic) {
       return toast.error("All fields are required");
     }
@@ -76,12 +87,22 @@ export default function Signup() {
 
     try {
       setRegistering(true);
-      const resp = await api.post("/auth/register", InputField);
-      toast.success(resp.data.message);
+
+      const response = await api.post("/auth/register", InputField);
+
+      toast.success(response.data.message || "Registered successfully");
+
+      // Optional: clear form after success
+      setInputField({
+        gymName: "",
+        email: "",
+        userName: "",
+        password: "",
+        profilePic:
+          "https://i.pinimg.com/474x/2b/53/0d/2b530d0302e87d964541b0765ec5f52b.jpg",
+      });
     } catch (err) {
-      toast.error(
-        err.response?.data?.error || "Registration failed"
-      );
+      toast.error(err.response?.data?.error || "Registration failed");
     } finally {
       setRegistering(false);
     }
@@ -111,7 +132,7 @@ export default function Signup() {
         <input
           type="email"
           value={InputField.email}
-          onChange={(e) => handleOnchange(e, "email")}
+          onChange={(e) => handleOnChange(e, "email")}
           className="w-full mb-4 px-4 py-3 bg-white/10 text-white placeholder-white/50 rounded-xl border border-white/20 focus:outline-none focus:border-purple-500"
           placeholder="Enter Email"
         />
@@ -120,7 +141,7 @@ export default function Signup() {
         <input
           type="text"
           value={InputField.gymName}
-          onChange={(e) => handleOnchange(e, "gymName")}
+          onChange={(e) => handleOnChange(e, "gymName")}
           className="w-full mb-4 px-4 py-3 bg-white/10 text-white placeholder-white/50 rounded-xl border border-white/20 focus:outline-none focus:border-purple-500"
           placeholder="Enter Gym Name"
         />
@@ -129,7 +150,7 @@ export default function Signup() {
         <input
           type="text"
           value={InputField.userName}
-          onChange={(e) => handleOnchange(e, "userName")}
+          onChange={(e) => handleOnChange(e, "userName")}
           className="w-full mb-4 px-4 py-3 bg-white/10 text-white placeholder-white/50 rounded-xl border border-white/20 focus:outline-none focus:border-purple-500"
           placeholder="Enter Username"
         />
@@ -138,7 +159,7 @@ export default function Signup() {
         <input
           type="password"
           value={InputField.password}
-          onChange={(e) => handleOnchange(e, "password")}
+          onChange={(e) => handleOnChange(e, "password")}
           className="w-full mb-4 px-4 py-3 bg-white/10 text-white placeholder-white/50 rounded-xl border border-white/20 focus:outline-none focus:border-purple-500"
           placeholder="Enter Password"
         />
@@ -150,7 +171,7 @@ export default function Signup() {
           className="w-full mb-4 px-4 py-3 rounded-xl border border-white/20 bg-white/5 text-sm text-white/70"
         />
 
-        {/* Loader */}
+        {/* Image Upload Loader */}
         {loaderImage && (
           <Stack sx={{ width: "100%" }} spacing={2} className="mb-4">
             <LinearProgress color="inherit" />

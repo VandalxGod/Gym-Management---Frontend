@@ -28,11 +28,13 @@ export default function AddMembers() {
     setInputField({ ...InputField, [name]: event.target.value });
   };
 
+  // 🔹 Upload image to Cloudinary
   const uploadImage = async (event) => {
+    if (!event.target.files[0]) return;
+
     setLoaderimage(true);
-    const files = event.target.files;
     const data = new FormData();
-    data.append("file", files[0]);
+    data.append("file", event.target.files[0]);
     data.append("upload_preset", "gym-management");
 
     try {
@@ -44,31 +46,30 @@ export default function AddMembers() {
         }
       );
       const result = await response.json();
-      setInputField({ ...InputField, profilePic: result.url });
-      setLoaderimage(false);
+      setInputField((prev) => ({ ...prev, profilePic: result.url }));
     } catch (err) {
-      console.log(err);
-      alert("Image upload failed");
+      console.error(err);
+      toast.error("Image upload failed");
+    } finally {
       setLoaderimage(false);
     }
   };
 
+  // 🔹 Fetch memberships
   const fetchMembership = async () => {
     try {
       const response = await api.get("/plans/get-membership");
       setMembershipList(response.data.membership);
 
       if (response.data.membership.length === 0) {
-        toast.error("No any Membership added yet", {
-          className: "text-lg",
-        });
+        toast.error("No any Membership added yet", { className: "text-lg" });
       } else {
         const firstId = response.data.membership[0]._id;
         setSelectedOption(firstId);
         setInputField((prev) => ({ ...prev, membership: firstId }));
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
       toast.error("Something went wrong");
     }
   };
@@ -80,9 +81,10 @@ export default function AddMembers() {
   const handleOnChangeSelect = (event) => {
     const value = event.target.value;
     setSelectedOption(value);
-    setInputField({ ...InputField, membership: value });
+    setInputField((prev) => ({ ...prev, membership: value }));
   };
 
+  // 🔹 Register member
   const handleRegisterButton = async () => {
     try {
       await api.post("/members/register-member", InputField);
@@ -93,7 +95,7 @@ export default function AddMembers() {
         navigate("/dashboard");
       }, 1200);
     } catch (err) {
-      console.log(err);
+      console.error(err);
       toast.error("Something went wrong");
     }
   };
