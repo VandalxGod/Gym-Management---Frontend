@@ -1,66 +1,26 @@
-import axios from "axios";
+import api from "../../api/axios";
 
 export const getMonthlyJoined = async () => {
-  try {
-    const res = await axios.get(
-      "http://localhost:4000/members/monthly-member",
-      { withCredentials: true }
-    );
-    return res.data;
-  } catch (err) {
-    console.error(err);
-    return { members: [] };
-  }
+  const res = await api.get("/members/monthly-member");
+  return res.data;
 };
 
 export const threeDayExpire = async () => {
-  try {
-    const res = await axios.get(
-      "http://localhost:4000/members/within-3-days-expiring",
-      { withCredentials: true }
-    );
-    return res.data;
-  } catch (err) {
-    console.error(err);
-    return { members: [] };
-  }
+  const res = await api.get("/members/within-3-days-expiring");
+  return res.data;
 };
 
 export const fourToSevenExpire = async () => {
-  try {
-    const res = await axios.get(
-      "http://localhost:4000/members/within-4-7-expiring",
-      { withCredentials: true }
-    );
-    return res.data;
-  } catch (err) {
-    console.error(err);
-    return { members: [] };
-  }
+  const res = await api.get("/members/within-4-7-expiring");
+  return res.data;
 };
 
 export const getExpiredMembers = async () => {
-  try {
-    const res = await axios.get(
-      "http://localhost:4000/members/expired-member",
-      { withCredentials: true }
-    );
-    return res.data;
-  } catch (err) {
-    console.error(err);
-    return { members: [] };
-  }
+  const res = await api.get("/members/expired-member");
+  return res.data;
 };
 
 export const getInactiveMembers = async () => {
-  try {
-    const res = await axios.get(
-      "http://localhost:4000/members/inactive-member",
-      { withCredentials: true }
-    );
-    return res.data;
-  } catch (err) {
-    console.error(err);
-    return { members: [] };
-  }
+  const res = await api.get("/members/inactive-member");
+  return res.data;
 };

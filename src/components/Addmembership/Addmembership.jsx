@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../../api/axios";
 import { toast, ToastContainer } from "react-toastify";
 
 export default function Addmembership({ handleClose }) {
@@ -11,18 +11,14 @@ export default function Addmembership({ handleClose }) {
   };
 
   const fetchMembership = async () => {
-    await axios
-      .get("http://localhost:4000/plans/get-membership", {
-        withCredentials: true,
-      })
-      .then((res) => {
-        setMembership(res.data.membership);
-        toast.success(res.data.membership.length + " Membership Fetched");
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error("Something went wrong");
-      });
+    try {
+      const res = await api.get("/plans/get-membership");
+      setMembership(res.data.membership);
+      toast.success(res.data.membership.length + " Membership Fetched");
+    } catch (err) {
+      console.log(err);
+      toast.error("Something went wrong");
+    }
   };
 
   useEffect(() => {
@@ -30,20 +26,14 @@ export default function Addmembership({ handleClose }) {
   }, []);
 
   const handleAddmembership = async () => {
-    await axios
-      .post(
-        "http://localhost:4000/plans/add-membership",
-        InputField,
-        { withCredentials: true }
-      )
-      .then((res) => {
-        toast.success(res.data.message);
-        handleClose();
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error("Something went wrong");
-      });
+    try {
+      const res = await api.post("/plans/add-membership", InputField);
+      toast.success(res.data.message);
+      handleClose();
+    } catch (err) {
+      console.log(err);
+      toast.error("Something went wrong");
+    }
   };
 
   return (

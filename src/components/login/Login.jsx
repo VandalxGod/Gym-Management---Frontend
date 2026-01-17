@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/axios";
 import { toast, ToastContainer } from "react-toastify";
 
 export default function Login() {
@@ -12,20 +12,18 @@ export default function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    await axios
-      .post("http://localhost:4000/auth/login", loginField, {
-        withCredentials: true,
-      })
-      .then((response) => {
-        localStorage.setItem("gymName", response.data.gym.gymName);
-        localStorage.setItem("gymPic", response.data.gym.profilePic);
-        localStorage.setItem("isLogin", true);
-        localStorage.setItem("token", response.data.token);
-        navigate("/dashboard");
-      })
-      .catch((err) => {
-        toast.error(err.response?.data?.error || "Login failed");
-      });
+    try {
+      const response = await api.post("/auth/login", loginField);
+
+      localStorage.setItem("gymName", response.data.gym.gymName);
+      localStorage.setItem("gymPic", response.data.gym.profilePic);
+      localStorage.setItem("isLogin", true);
+      localStorage.setItem("token", response.data.token);
+
+      navigate("/dashboard");
+    } catch (err) {
+      toast.error(err.response?.data?.error || "Login failed");
+    }
   };
 
   const handleOnChange = (event, name) => {
@@ -45,12 +43,10 @@ export default function Login() {
           text-white
         "
       >
-        {/* Title */}
         <div className="text-center text-2xl sm:text-3xl font-semibold mb-6">
           Login
         </div>
 
-        {/* Username */}
         <input
           type="text"
           value={loginField.userName}
@@ -65,7 +61,6 @@ export default function Login() {
           placeholder="Enter Username"
         />
 
-        {/* Password */}
         <input
           type="password"
           value={loginField.password}
@@ -80,7 +75,6 @@ export default function Login() {
           placeholder="Enter Password"
         />
 
-        {/* Login Button */}
         <div
           onClick={handleLogin}
           className="

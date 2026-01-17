@@ -6,8 +6,8 @@ import HomeIcon from "@mui/icons-material/Home";
 import GroupIcon from "@mui/icons-material/Group";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-// axios + toast
-import axios from "axios";
+// api + toast
+import api from "../../api/axios";
 import { toast } from "react-toastify";
 
 export default function Sidebar() {
@@ -31,7 +31,6 @@ export default function Sidebar() {
     navigate("/");
   };
 
-  // Upload Image + Save Permanently in DB
   const uploadImage = async (event) => {
     setLoading(true);
 
@@ -40,22 +39,18 @@ export default function Sidebar() {
     data.append("upload_preset", "gym-management");
 
     try {
-      // Upload to Cloudinary
-      const cloud = await axios.post(
+      const cloud = await fetch(
         "https://api.cloudinary.com/v1_1/dgsfifvhy/image/upload",
-        data
+        { method: "POST", body: data }
       );
+      const result = await cloud.json();
 
-      const imageUrl = cloud.data.secure_url;
+      const imageUrl = result.secure_url;
 
-      // Update DB
-      await axios.put(
-        "http://localhost:4000/auth/update-profile-pic",
-        { profilePic: imageUrl },
-        { withCredentials: true }
-      );
+      await api.put("/auth/update-profile-pic", {
+        profilePic: imageUrl,
+      });
 
-      // Save Locally
       localStorage.setItem("gymPic", imageUrl);
       setProfilePic(imageUrl);
 
@@ -84,9 +79,7 @@ export default function Sidebar() {
         backdrop-blur-2xl
       "
     >
-      {/* ===== TOP BRAND SECTION ===== */}
       <div className="flex flex-col items-center gap-4">
-        {/* Gym Image */}
         <div className="relative group">
           <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden shadow-2xl">
             <img
@@ -115,19 +108,15 @@ export default function Sidebar() {
           </label>
         </div>
 
-        {/* Gym Name */}
         <h1 className="text-xl sm:text-2xl font-bold text-center tracking-wide">
           {localStorage.getItem("gymName")}
         </h1>
 
-        {/* Greeting */}
         <p className="text-sm text-zinc-400">{greeting}</p>
       </div>
 
-      {/* Divider */}
       <div className="h-px bg-white/10 my-6"></div>
 
-      {/* ===== NAVIGATION ===== */}
       <nav className="flex flex-col gap-3">
         {navItems.map((item) => {
           const active = location.pathname === item.to;
@@ -152,10 +141,8 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Spacer */}
       <div className="flex-1"></div>
 
-      {/* ===== LOGOUT BUTTON ===== */}
       <button
         onClick={handleLogout}
         className="

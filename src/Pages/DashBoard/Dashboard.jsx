@@ -1,4 +1,3 @@
-// src/Pages/DashBoard/Dashboard.jsx
 import React, { useEffect, useState } from "react";
 import Sidebar from "../../components/sidebar/Sidebar.jsx";
 import Header from "./Header";
@@ -11,7 +10,7 @@ import MoreTimeIcon from "@mui/icons-material/MoreTime";
 import ErrorIcon from "@mui/icons-material/Error";
 import PersonOffIcon from "@mui/icons-material/PersonOff";
 
-import axios from "axios";
+import api from "../../api/axios";
 import { Link } from "react-router-dom";
 
 export default function Dashboard() {
@@ -32,19 +31,16 @@ export default function Dashboard() {
     async function fetchStats() {
       setLoadingStats(true);
       try {
-        const allResp = await axios.get(
-          "http://localhost:4000/members/all-member?skip=0&limit=1",
-          { withCredentials: true }
+        const allResp = await api.get(
+          "/members/all-member?skip=0&limit=1"
         );
 
-        const expiredResp = await axios.get(
-          "http://localhost:4000/members/expired-member",
-          { withCredentials: true }
+        const expiredResp = await api.get(
+          "/members/expired-member"
         );
 
-        const inactiveResp = await axios.get(
-          "http://localhost:4000/members/inactive-member",
-          { withCredentials: true }
+        const inactiveResp = await api.get(
+          "/members/inactive-member"
         );
 
         const total =
@@ -97,7 +93,6 @@ export default function Dashboard() {
 
   return (
     <div className="flex h-screen w-full bg-[#f5f5f7]">
-      {/* Sidebar */}
       <div
         className={`transition-all duration-300 ${
           isSidebarOpen ? "w-64" : "w-0"
@@ -106,21 +101,18 @@ export default function Dashboard() {
         <Sidebar />
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 flex flex-col">
         <Header
           isSidebarOpen={isSidebarOpen}
           setIsSidebarOpen={setIsSidebarOpen}
         />
 
-        {/* Top Stats */}
         <div className="px-4 sm:px-8 mt-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <TopStat
               label="Total Members"
               value={renderStat(totalMembers)}
               icon={<PeopleIcon sx={{ fontSize: 28, color: "#0f172a" }} />}
-              tone="neutral"
             />
 
             <TopStat
@@ -139,61 +131,14 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Dashboard Cards */}
         <main className="flex-1 p-4 sm:p-8 overflow-y-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            <DashboardCard
-              to="/Member"
-              title="Joined Members"
-              subtitle="All registered members"
-              accent="bg-emerald-500/90"
-              icon={<PeopleIcon sx={{ fontSize: 44, color: "white" }} />}
-            />
-
-            <DashboardCard
-              to="/specific/monthly"
-              onClick={() => handleOnClickMenu("monthlyJoined")}
-              title="Monthly Joined"
-              subtitle="Members who joined this month"
-              accent="bg-sky-500/90"
-              icon={<CalendarMonthIcon sx={{ fontSize: 44, color: "white" }} />}
-            />
-
-            <DashboardCard
-              to="/specific/expire-with-in-3-days"
-              onClick={() => handleOnClickMenu("threeDayExpire")}
-              title="Expiring in 3 Days"
-              subtitle="Memberships that expire soon"
-              accent="bg-orange-500/95"
-              icon={<AccessAlarmIcon sx={{ fontSize: 44, color: "white" }} />}
-            />
-
-            <DashboardCard
-              to="/specific/expire-within-4-7-days"
-              onClick={() => handleOnClickMenu("fourtoSevendayExpire")}
-              title="Expiring 4–7 Days"
-              subtitle="Upcoming expirations"
-              accent="bg-yellow-500/95"
-              icon={<MoreTimeIcon sx={{ fontSize: 44, color: "white" }} />}
-            />
-
-            <DashboardCard
-              to="/specific/expired"
-              onClick={() => handleOnClickMenu("Expired")}
-              title="Expired"
-              subtitle="Members with expired memberships"
-              accent="bg-red-600/95"
-              icon={<ErrorIcon sx={{ fontSize: 44, color: "white" }} />}
-            />
-
-            <DashboardCard
-              to="/specific/inactive-members"
-              onClick={() => handleOnClickMenu("InActiveMembers")}
-              title="Inactive Members"
-              subtitle="Members not active recently"
-              accent="bg-purple-600/95"
-              icon={<PersonOffIcon sx={{ fontSize: 44, color: "white" }} />}
-            />
+            <DashboardCard to="/Member" title="Joined Members" subtitle="All registered members" accent="bg-emerald-500/90" icon={<PeopleIcon sx={{ fontSize: 44, color: "white" }} />} />
+            <DashboardCard to="/specific/monthly" onClick={() => handleOnClickMenu("monthlyJoined")} title="Monthly Joined" subtitle="Members who joined this month" accent="bg-sky-500/90" icon={<CalendarMonthIcon sx={{ fontSize: 44, color: "white" }} />} />
+            <DashboardCard to="/specific/expire-with-in-3-days" onClick={() => handleOnClickMenu("threeDayExpire")} title="Expiring in 3 Days" subtitle="Memberships that expire soon" accent="bg-orange-500/95" icon={<AccessAlarmIcon sx={{ fontSize: 44, color: "white" }} />} />
+            <DashboardCard to="/specific/expire-within-4-7-days" onClick={() => handleOnClickMenu("fourtoSevendayExpire")} title="Expiring 4–7 Days" subtitle="Upcoming expirations" accent="bg-yellow-500/95" icon={<MoreTimeIcon sx={{ fontSize: 44, color: "white" }} />} />
+            <DashboardCard to="/specific/expired" onClick={() => handleOnClickMenu("Expired")} title="Expired" subtitle="Members with expired memberships" accent="bg-red-600/95" icon={<ErrorIcon sx={{ fontSize: 44, color: "white" }} />} />
+            <DashboardCard to="/specific/inactive-members" onClick={() => handleOnClickMenu("InActiveMembers")} title="Inactive Members" subtitle="Members not active recently" accent="bg-purple-600/95" icon={<PersonOffIcon sx={{ fontSize: 44, color: "white" }} />} />
           </div>
         </main>
 
@@ -204,53 +149,25 @@ export default function Dashboard() {
 }
 
 function TopStat({ label, value, icon, tone = "neutral" }) {
-  const toneBg =
-    tone === "green"
-      ? "bg-emerald-50"
-      : tone === "red"
-      ? "bg-red-50"
-      : "bg-white";
-
-  const toneBorder =
-    tone === "green"
-      ? "border-emerald-100"
-      : tone === "red"
-      ? "border-red-100"
-      : "border-gray-100";
+  const toneBg = tone === "green" ? "bg-emerald-50" : tone === "red" ? "bg-red-50" : "bg-white";
+  const toneBorder = tone === "green" ? "border-emerald-100" : tone === "red" ? "border-red-100" : "border-gray-100";
 
   return (
-    <div
-      className={`flex items-center justify-between p-5 rounded-lg shadow-sm border ${toneBg} ${toneBorder}`}
-    >
+    <div className={`flex items-center justify-between p-5 rounded-lg shadow-sm border ${toneBg} ${toneBorder}`}>
       <div>
         <div className="text-sm text-gray-500">{label}</div>
-        <div className="mt-1 text-2xl font-semibold text-gray-900">
-          {value}
-        </div>
+        <div className="mt-1 text-2xl font-semibold text-gray-900">{value}</div>
       </div>
-
-      <div className="w-14 h-14 rounded-lg flex items-center justify-center bg-white shadow">
-        {icon}
-      </div>
+      <div className="w-14 h-14 rounded-lg flex items-center justify-center bg-white shadow">{icon}</div>
     </div>
   );
 }
 
 function DashboardCard({ to, onClick, title, subtitle, accent, icon }) {
   return (
-    <Link
-      to={to}
-      onClick={onClick}
-      className="group bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-lg transition transform hover:-translate-y-1"
-    >
-      <div
-        className={`w-16 h-16 rounded-xl flex items-center justify-center mb-4 ${accent}`}
-      >
-        {icon}
-      </div>
-      <h3 className="text-xl font-semibold text-gray-900 mb-1">
-        {title}
-      </h3>
+    <Link to={to} onClick={onClick} className="group bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-lg transition transform hover:-translate-y-1">
+      <div className={`w-16 h-16 rounded-xl flex items-center justify-center mb-4 ${accent}`}>{icon}</div>
+      <h3 className="text-xl font-semibold text-gray-900 mb-1">{title}</h3>
       <p className="text-sm text-gray-500">{subtitle}</p>
     </Link>
   );

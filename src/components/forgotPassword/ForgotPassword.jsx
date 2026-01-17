@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Loader from "../Loader/loader";
-import axios from "axios";
+import api from "../../api/axios";
 import { toast, ToastContainer } from "react-toastify";
 
 export default function ForgotPassword() {
@@ -26,59 +26,53 @@ export default function ForgotPassword() {
 
   const changePassword = async () => {
     setLoader(true);
-    await axios
-      .post("http://localhost:4000/auth/reset-password", {
+    try {
+      const response = await api.post("/auth/reset-password", {
         email: InputField.email,
         newPassword: InputField.newPassword,
-      })
-      .then((response) => {
-        toast.success(response.data.message);
-        setLoader(false);
-      })
-      .catch((err) => {
-        toast.error("Some technical issue while sending Mail");
-        console.log(err);
-        setLoader(false);
       });
+      toast.success(response.data.message);
+    } catch (err) {
+      toast.error("Some technical issue while sending Mail");
+      console.log(err);
+    } finally {
+      setLoader(false);
+    }
   };
 
   const verifyOtp = async () => {
     setLoader(true);
-    await axios
-      .post("http://localhost:4000/auth/reset-password/checkOtp", {
+    try {
+      const response = await api.post("/auth/reset-password/checkOtp", {
         email: InputField.email,
         otp: InputField.otp,
-      })
-      .then((response) => {
-        setOtpValidate(true);
-        setContentValue("Submit Your Password");
-        toast.success(response.data.message);
-        setLoader(false);
-      })
-      .catch((err) => {
-        toast.error("Some technical issue while sending Mail");
-        console.log(err);
-        setLoader(false);
       });
+      setOtpValidate(true);
+      setContentValue("Submit Your Password");
+      toast.success(response.data.message);
+    } catch (err) {
+      toast.error("Some technical issue while sending Mail");
+      console.log(err);
+    } finally {
+      setLoader(false);
+    }
   };
 
   const sendOtp = async () => {
     setLoader(true);
-    await axios
-      .post("http://localhost:4000/auth/reset-password/sendOtp", {
+    try {
+      const response = await api.post("/auth/reset-password/sendOtp", {
         email: InputField.email,
-      })
-      .then((response) => {
-        setEmailSumbit(true);
-        setContentValue("Submit Your OTP");
-        toast.success(response.data.message);
-        setLoader(false);
-      })
-      .catch((err) => {
-        toast.error("Some technical issue while sending Mail");
-        console.log(err);
-        setLoader(false);
       });
+      setEmailSumbit(true);
+      setContentValue("Submit Your OTP");
+      toast.success(response.data.message);
+    } catch (err) {
+      toast.error("Some technical issue while sending Mail");
+      console.log(err);
+    } finally {
+      setLoader(false);
+    }
   };
 
   const handleOnChange = (event, name) => {
@@ -88,7 +82,6 @@ export default function ForgotPassword() {
   return (
     <div className="w-full flex justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Email */}
         <div className="w-full mb-5">
           <div className="mb-1 font-semibold">Enter Your Email</div>
           <input
@@ -100,7 +93,6 @@ export default function ForgotPassword() {
           />
         </div>
 
-        {/* OTP */}
         {emailSubmit && (
           <div className="w-full mb-5">
             <div className="mb-1 font-semibold">Enter Your OTP</div>
@@ -114,7 +106,6 @@ export default function ForgotPassword() {
           </div>
         )}
 
-        {/* New Password */}
         {otpValidate && (
           <div className="w-full mb-5">
             <div className="mb-1 font-semibold">Enter Your New Password</div>
@@ -128,7 +119,6 @@ export default function ForgotPassword() {
           </div>
         )}
 
-        {/* Submit Button */}
         <div
           className="bg-zinc-800 text-white w-full p-3 rounded-lg text-center font-semibold border-2 cursor-pointer hover:bg-white hover:text-black"
           onClick={handleSubmit}
