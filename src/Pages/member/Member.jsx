@@ -120,9 +120,12 @@ export default function Member() {
           <Modal
             header="Add Member"
             handleClose={() => setAddmember(false)}
-            content={<AddMembers />}
+            content={
+              <AddMembers onSuccess={() => setAddmember(false)} />
+            }
           />
         )}
+
 
         {/* ✅ ADD MEMBERSHIP MODAL */}
         {addMembership && (

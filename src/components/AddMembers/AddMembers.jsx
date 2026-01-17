@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import api from "../../api/axios";
+import { useNavigate } from "react-router-dom";
 
 // Material UI
 import Stack from "@mui/material/Stack";
@@ -8,6 +9,8 @@ import LinearProgress from "@mui/material/LinearProgress";
 import { toast, ToastContainer } from "react-toastify";
 
 export default function AddMembers() {
+  const navigate = useNavigate();
+
   const [InputField, setInputField] = useState({
     name: "",
     mobileNo: "",
@@ -56,13 +59,13 @@ export default function AddMembers() {
       setMembershipList(response.data.membership);
 
       if (response.data.membership.length === 0) {
-        return toast.error("No any Membership added yet", {
+        toast.error("No any Membership added yet", {
           className: "text-lg",
         });
       } else {
-        let a = response.data.membership[0]._id;
-        setSelectedOption(a);
-        setInputField({ ...InputField, membership: a });
+        const firstId = response.data.membership[0]._id;
+        setSelectedOption(firstId);
+        setInputField((prev) => ({ ...prev, membership: firstId }));
       }
     } catch (err) {
       console.log(err);
@@ -75,7 +78,7 @@ export default function AddMembers() {
   }, []);
 
   const handleOnChangeSelect = (event) => {
-    let value = event.target.value;
+    const value = event.target.value;
     setSelectedOption(value);
     setInputField({ ...InputField, membership: value });
   };
@@ -84,9 +87,11 @@ export default function AddMembers() {
     try {
       await api.post("/members/register-member", InputField);
       toast.success("Added Successfully");
+
+      // ✅ SPA navigation (NO reload)
       setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+        navigate("/dashboard");
+      }, 1200);
     } catch (err) {
       console.log(err);
       toast.error("Something went wrong");
@@ -150,6 +155,7 @@ export default function AddMembers() {
             <img
               src={InputField.profilePic}
               className="border-2 w-full h-full rounded-full"
+              alt="profile"
             />
           </div>
 
