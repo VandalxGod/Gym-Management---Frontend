@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./SignUp.css";
 import Modal from "../modal/Modal";
 import ForgotPassword from "../forgotPassword/ForgotPassword";
-import axios from "axios";
+import api from "../../api/axios";
 import { toast, ToastContainer } from "react-toastify";
 
 // Material UI
@@ -21,6 +21,7 @@ export default function Signup() {
 
   const [forgotPassword, setForgotPassword] = useState(false);
   const [loaderImage, setLoaderimage] = useState(false);
+  const [registering, setRegistering] = useState(false);
 
   const handleClose = () => {
     setForgotPassword((prev) => !prev);
@@ -30,37 +31,60 @@ export default function Signup() {
     setInputField({ ...InputField, [name]: event.target.value });
   };
 
+  // 🔹 Upload image to Cloudinary
   const uploadImage = async (event) => {
+    if (!event.target.files[0]) return;
+
     setLoaderimage(true);
-    const files = event.target.files;
     const data = new FormData();
-    data.append("file", files[0]);
+    data.append("file", event.target.files[0]);
     data.append("upload_preset", "gym-management");
 
     try {
-      const response = await axios.post(
+      const response = await fetch(
         "https://api.cloudinary.com/v1_1/dgsfifvhy/image/upload",
-        data
+        {
+          method: "POST",
+          body: data,
+        }
       );
-      const imageUrl = response.data.url;
-      setInputField({ ...InputField, profilePic: imageUrl });
-      setLoaderimage(false);
+      const result = await response.json();
+      setInputField((prev) => ({
+        ...prev,
+        profilePic: result.secure_url,
+      }));
     } catch (err) {
-      console.log(err);
-      alert("Image upload failed");
+      console.error(err);
+      toast.error("Image upload failed");
+    } finally {
       setLoaderimage(false);
     }
   };
 
+  // 🔹 Register Gym
   const handleRegister = async () => {
-    await axios
-      .post("http://localhost:4000/auth/register", InputField)
-      .then((resp) => {
-        toast.success(resp.data.message);
-      })
-      .catch((err) => {
-        toast.error(err.response.data.error);
-      });
+    const { email, gymName, userName, password, profilePic } = InputField;
+
+    // Frontend validation
+    if (!email || !gymName || !userName || !password || !profilePic) {
+      return toast.error("All fields are required");
+    }
+
+    if (loaderImage) {
+      return toast.error("Please wait for image upload");
+    }
+
+    try {
+      setRegistering(true);
+      const resp = await api.post("/auth/register", InputField);
+      toast.success(resp.data.message);
+    } catch (err) {
+      toast.error(
+        err.response?.data?.error || "Registration failed"
+      );
+    } finally {
+      setRegistering(false);
+    }
   };
 
   return (
@@ -123,7 +147,7 @@ export default function Signup() {
         <input
           type="file"
           onChange={uploadImage}
-          className="w-full mb-4 px-4 py-3 rounded-xl border border-white/20 bg-white/5 text-sm text-white/70 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-white/20 file:text-white hover:file:bg-white/30"
+          className="w-full mb-4 px-4 py-3 rounded-xl border border-white/20 bg-white/5 text-sm text-white/70"
         />
 
         {/* Loader */}
@@ -145,9 +169,12 @@ export default function Signup() {
         {/* Register Button */}
         <div
           onClick={handleRegister}
-          className="w-full py-3 mb-3 rounded-xl text-center font-medium cursor-pointer bg-white/10 text-white border border-white/20 hover:bg-white/20 transition"
+          className={`w-full py-3 mb-3 rounded-xl text-center font-medium cursor-pointer 
+            bg-white/10 text-white border border-white/20 hover:bg-white/20 transition
+            ${registering ? "opacity-50 pointer-events-none" : ""}
+          `}
         >
-          Register
+          {registering ? "Registering..." : "Register"}
         </div>
 
         {/* Forgot Password */}
