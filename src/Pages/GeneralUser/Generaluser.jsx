@@ -59,15 +59,21 @@ export default function GeneralUser() {
   };
 
   return (
-    <div className="flex-1 min-h-screen overflow-auto p-4 sm:p-6 md:p-10 bg-gray-50">
-      {/* Header Row */}
+    <div className="p-4 sm:p-6 md:p-10 bg-gray-50 min-h-full">
+      {/* ================= HEADER ROW ================= */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
         <Link
           to="/dashboard"
-          className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl 
-                     border shadow-sm text-gray-600 hover:text-black transition w-fit"
+          className="
+            flex items-center gap-2
+            bg-white px-4 py-2
+            rounded-xl border shadow-sm
+            text-gray-600 hover:text-black
+            transition w-fit
+          "
         >
-          <ChevronLeftIcon /> Back
+          <ChevronLeftIcon />
+          Back
         </Link>
 
         <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-800">
@@ -75,7 +81,7 @@ export default function GeneralUser() {
         </h1>
       </div>
 
-      {/* Content Box */}
+      {/* ================= CONTENT ================= */}
       <div className="bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-sm min-h-[60vh]">
         {data.length === 0 ? (
           <p className="text-gray-500 text-center py-20 text-base sm:text-lg">

@@ -28,7 +28,7 @@ export default function AddMembers() {
     setInputField({ ...InputField, [name]: event.target.value });
   };
 
-  // 🔹 Upload image to Cloudinary
+  /* ================= IMAGE UPLOAD ================= */
   const uploadImage = async (event) => {
     if (!event.target.files[0]) return;
 
@@ -55,15 +55,13 @@ export default function AddMembers() {
     }
   };
 
-  // 🔹 Fetch memberships
+  /* ================= FETCH MEMBERSHIP ================= */
   const fetchMembership = async () => {
     try {
       const response = await api.get("/plans/get-membership");
       setMembershipList(response.data.membership);
 
-      if (response.data.membership.length === 0) {
-        toast.error("No any Membership added yet", { className: "text-lg" });
-      } else {
+      if (response.data.membership.length > 0) {
         const firstId = response.data.membership[0]._id;
         setSelectedOption(firstId);
         setInputField((prev) => ({ ...prev, membership: firstId }));
@@ -84,13 +82,12 @@ export default function AddMembers() {
     setInputField((prev) => ({ ...prev, membership: value }));
   };
 
-  // 🔹 Register member
+  /* ================= REGISTER MEMBER ================= */
   const handleRegisterButton = async () => {
     try {
       await api.post("/members/register-member", InputField);
       toast.success("Added Successfully");
 
-      // ✅ SPA navigation (NO reload)
       setTimeout(() => {
         navigate("/dashboard");
       }, 1200);
@@ -101,8 +98,8 @@ export default function AddMembers() {
   };
 
   return (
-    <div className="text-black p-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-lg">
+    <div className="text-black p-4 sm:p-6 max-h-[85vh] overflow-y-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-base sm:text-lg">
         <input
           value={InputField.name}
           onChange={(e) => handleOnChange(e, "name")}
@@ -115,7 +112,7 @@ export default function AddMembers() {
           value={InputField.mobileNo}
           onChange={(e) => handleOnChange(e, "mobileNo")}
           className="border-2 w-full px-3 py-2 border-black rounded-md h-12"
-          type="text"
+          type="tel"
           placeholder="Mobile no"
         />
 
@@ -149,30 +146,42 @@ export default function AddMembers() {
         <input
           type="file"
           onChange={uploadImage}
-          className="border-2 bg-zinc-200 rounded-md w-full px-3 py-2"
+          className="border-2 bg-zinc-200 rounded-md w-full px-3 py-2 text-sm"
         />
 
-        <div className="flex items-center gap-4">
-          <div className="w-[100px] h-[100px]">
-            <img
-              src={InputField.profilePic}
-              className="border-2 w-full h-full rounded-full"
-              alt="profile"
-            />
+        {/* ================= PROFILE + REGISTER ================= */}
+        <div className="md:col-span-2 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-4">
+            <div className="w-[100px] h-[100px]">
+              <img
+                src={InputField.profilePic}
+                className="border-2 w-full h-full rounded-full object-cover"
+                alt="profile"
+              />
+            </div>
+
+            {loaderImage && (
+              <Stack sx={{ width: "200px", color: "black" }} spacing={2}>
+                <LinearProgress color="inherit" />
+              </Stack>
+            )}
           </div>
 
-          {loaderImage && (
-            <Stack sx={{ width: "100%", color: "black" }} spacing={2}>
-              <LinearProgress color="inherit" />
-            </Stack>
-          )}
-        </div>
-
-        <div
-          onClick={handleRegisterButton}
-          className="p-3 border-2 w-full md:w-40 text-lg h-14 text-center bg-black text-white rounded-xl cursor-pointer hover:bg-white hover:text-black flex items-center justify-center"
-        >
-          Register
+          <div
+            onClick={handleRegisterButton}
+            className="
+              p-3 border-2
+              w-full sm:w-40
+              text-lg h-14
+              text-center
+              bg-black text-white rounded-xl
+              cursor-pointer
+              hover:bg-white hover:text-black
+              flex items-center justify-center
+            "
+          >
+            Register
+          </div>
         </div>
       </div>
 

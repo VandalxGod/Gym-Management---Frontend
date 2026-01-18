@@ -1,50 +1,53 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
-export default function Header({ isSidebarOpen, setIsSidebarOpen }) {
-  const [gymPic, setGymPic] = useState(localStorage.getItem("gymPic"));
-
-  // Live update whenever profile changes in Sidebar
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const updatedPic = localStorage.getItem("gymPic");
-      if (updatedPic !== gymPic) {
-        setGymPic(updatedPic);
-      }
-    }, 300);
-
-    return () => clearInterval(interval);
-  }, [gymPic]);
-
+export default function Header({ isSidebarOpen, toggleSidebar }) {
   return (
     <header
-      className="w-full bg-white shadow-md border-b 
-                 px-4 sm:px-6 py-3 sm:py-4
-                 flex items-center justify-between 
-                 sticky top-0 z-10"
+      className="
+        h-16
+        bg-white
+        border-b
+        shadow-sm
+        flex items-center
+        gap-3 sm:gap-4
+        px-3 sm:px-4 md:px-6
+        sticky top-0
+        z-10
+      "
     >
-      {/* LEFT SECTION */}
-      <div className="flex items-center gap-3 sm:gap-4">
-        <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="p-2 rounded-lg hover:bg-gray-200 transition"
-        >
-          <MenuIcon sx={{ fontSize: 26 }} />
-        </button>
+      {/* ================= MENU BUTTON ================= */}
+      <button
+        onClick={toggleSidebar}
+        className="
+          p-2 sm:p-2.5
+          rounded-lg
+          hover:bg-gray-200
+          transition
+          flex items-center justify-center
+          shrink-0
+        "
+        aria-label="Toggle Sidebar"
+      >
+        {isSidebarOpen ? (
+          <ChevronLeftIcon fontSize="large" />
+        ) : (
+          <MenuIcon fontSize="large" />
+        )}
+      </button>
 
-        <h1 className="text-xl sm:text-2xl font-semibold tracking-wide text-gray-900">
-          Dashboard
-        </h1>
-      </div>
-
-      {/* RIGHT SECTION */}
-      <img
-        src={gymPic}
-        className="w-9 h-9 sm:w-11 sm:h-11 rounded-full 
-                   border border-gray-300 object-cover 
-                   shadow-sm hover:scale-105 transition"
-        alt="profile"
-      />
+      {/* ================= TITLE ================= */}
+      <h1
+        className="
+          text-lg sm:text-xl md:text-2xl
+          font-semibold
+          text-gray-800
+          truncate
+        "
+      >
+        Gym Management System
+      </h1>
     </header>
   );
 }

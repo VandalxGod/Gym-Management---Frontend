@@ -8,6 +8,10 @@ export default function ParticleBackground() {
     const ctx = canvas.getContext("2d");
 
     let particles = [];
+    let animationId;
+
+    const dpr = window.devicePixelRatio || 1;
+
     let particleCount =
       window.innerWidth > 1800
         ? 150
@@ -23,22 +27,39 @@ export default function ParticleBackground() {
       radius: 140,
     };
 
+    /* ================= CANVAS RESIZE ================= */
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = `${window.innerWidth}px`;
+      canvas.style.height = `${window.innerHeight}px`;
+      ctx.scale(dpr, dpr);
     };
+
     resizeCanvas();
 
-    window.addEventListener("resize", () => {
+    const handleResize = () => {
       resizeCanvas();
       initParticles();
-    });
+    };
 
-    window.addEventListener("mousemove", (e) => {
-      mouse.x = e.x;
-      mouse.y = e.y;
-    });
+    const handleMouseMove = (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    };
 
+    const handleTouchMove = (e) => {
+      if (e.touches.length > 0) {
+        mouse.x = e.touches[0].clientX;
+        mouse.y = e.touches[0].clientY;
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("touchmove", handleTouchMove, { passive: true });
+
+    /* ================= PARTICLE CLASS ================= */
     class Particle {
       constructor(x, y) {
         this.x = x;
@@ -53,17 +74,19 @@ export default function ParticleBackground() {
         this.x += this.vx;
         this.y += this.vy;
 
-        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+        if (this.x < 0 || this.x > canvas.width / dpr) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height / dpr) this.vy *= -1;
 
-        let dx = this.x - mouse.x;
-        let dy = this.y - mouse.y;
-        let dist = Math.sqrt(dx * dx + dy * dy);
+        if (mouse.x !== null && mouse.y !== null) {
+          let dx = this.x - mouse.x;
+          let dy = this.y - mouse.y;
+          let dist = Math.sqrt(dx * dx + dy * dy);
 
-        if (dist < mouse.radius) {
-          let force = (mouse.radius - dist) / mouse.radius;
-          this.x += dx * force * this.smoothFactor * 4;
-          this.y += dy * force * this.smoothFactor * 4;
+          if (dist < mouse.radius) {
+            let force = (mouse.radius - dist) / mouse.radius;
+            this.x += dx * force * this.smoothFactor * 4;
+            this.y += dy * force * this.smoothFactor * 4;
+          }
         }
       }
 
@@ -75,15 +98,20 @@ export default function ParticleBackground() {
       }
     }
 
+    /* ================= INIT ================= */
     const initParticles = () => {
       particles = [];
       for (let i = 0; i < particleCount; i++) {
-        let x = Math.random() * canvas.width;
-        let y = Math.random() * canvas.height;
-        particles.push(new Particle(x, y));
+        particles.push(
+          new Particle(
+            Math.random() * canvas.width / dpr,
+            Math.random() * canvas.height / dpr
+          )
+        );
       }
     };
 
+    /* ================= CONNECT ================= */
     const connectParticles = () => {
       for (let a = 0; a < particles.length; a++) {
         for (let b = a + 1; b < particles.length; b++) {
@@ -105,6 +133,7 @@ export default function ParticleBackground() {
       }
     };
 
+    /* ================= ANIMATE ================= */
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -114,11 +143,19 @@ export default function ParticleBackground() {
       });
 
       connectParticles();
-      requestAnimationFrame(animate);
+      animationId = requestAnimationFrame(animate);
     };
 
     initParticles();
     animate();
+
+    /* ================= CLEANUP ================= */
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("touchmove", handleTouchMove);
+    };
   }, []);
 
   return (

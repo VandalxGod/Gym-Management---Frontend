@@ -20,11 +20,12 @@ export default function Memberdetail() {
     fetchMembership();
   }, []);
 
+  /* ================= FETCH MEMBERSHIP PLANS ================= */
   const fetchMembership = async () => {
     try {
       const res = await api.get("/plans/get-membership");
-      setMembership(res.data.membership);
-      if (res.data.membership.length > 0) {
+      setMembership(res.data.membership || []);
+      if (res.data.membership?.length > 0) {
         setPlanMember(res.data.membership[0]._id);
       }
     } catch {
@@ -32,6 +33,7 @@ export default function Memberdetail() {
     }
   };
 
+  /* ================= FETCH MEMBER DATA ================= */
   const fetchData = async () => {
     try {
       const res = await api.get(`/members/get-member/${id}`);
@@ -42,45 +44,68 @@ export default function Memberdetail() {
     }
   };
 
+  /* ================= STATUS TOGGLE ================= */
   const handleSwitchBtn = async () => {
     const newStatus = status === "Active" ? "Pending" : "Active";
-    await api.post(`/members/change-status/${id}`, { status: newStatus });
-    setStatus(newStatus);
-    toast.success("Status Updated");
+    try {
+      await api.post(`/members/change-status/${id}`, {
+        status: newStatus,
+      });
+      setStatus(newStatus);
+      toast.success("Status Updated");
+    } catch {
+      toast.error("Failed to update status");
+    }
   };
 
+  /* ================= RENEW MEMBERSHIP ================= */
   const handleRenewSaveBtn = async () => {
-    const res = await api.put(`/members/update-member-plan/${id}`, {
-      membership: planMember,
-    });
-    setData(res.data.member);
-    toast.success(res.data.message);
-    setRenew(false);
+    try {
+      const res = await api.put(`/members/update-member-plan/${id}`, {
+        membership: planMember,
+      });
+      setData(res.data.member);
+      toast.success(res.data.message);
+      setRenew(false);
+    } catch {
+      toast.error("Failed to renew membership");
+    }
   };
 
   if (!data) {
-    return <div className="p-10 text-center text-gray-500">Loading...</div>;
+    return (
+      <div className="p-10 text-center text-gray-500">
+        Loading...
+      </div>
+    );
   }
 
   return (
-    <div className="flex-1 bg-gray-50 p-4 sm:p-6 md:p-10">
-      {/* Header */}
+    <div className="p-4 sm:p-6 md:p-10 bg-gray-50 min-h-full">
+      {/* ================= HEADER ================= */}
       <div className="flex items-center gap-4 mb-8">
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl border bg-white hover:bg-black hover:text-white transition"
+          className="
+            flex items-center gap-2
+            px-4 py-2 rounded-xl
+            border bg-white
+            hover:bg-black hover:text-white
+            transition
+          "
         >
           <ChevronLeftIcon />
           Back
         </button>
+
         <h1 className="text-2xl sm:text-3xl font-semibold text-gray-800">
           Member Details
         </h1>
       </div>
 
-      {/* Main Card */}
+      {/* ================= MAIN CARD ================= */}
       <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-sm overflow-hidden">
-        {/* Profile Section */}
+        {/* PROFILE SECTION */}
         <div className="flex flex-col sm:flex-row items-center gap-6 p-8 border-b">
           <img
             src={data.profilePic}
@@ -89,8 +114,12 @@ export default function Memberdetail() {
           />
 
           <div className="text-center sm:text-left space-y-2">
-            <h2 className="text-2xl font-bold text-gray-800">{data.name}</h2>
-            <p className="text-gray-500">+91 {data.mobileNo}</p>
+            <h2 className="text-2xl font-bold text-gray-800">
+              {data.name}
+            </h2>
+            <p className="text-gray-500">
+              +91 {data.mobileNo}
+            </p>
 
             <span
               className={`inline-block px-4 py-1 rounded-full text-sm font-medium ${
@@ -104,20 +133,24 @@ export default function Memberdetail() {
           </div>
         </div>
 
-        {/* Info Grid */}
+        {/* INFO GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-8">
-          {/* Next Bill */}
+          {/* NEXT BILL DATE */}
           <div className="bg-gray-50 rounded-xl p-5">
-            <p className="text-sm text-gray-500">Next Bill Date</p>
+            <p className="text-sm text-gray-500">
+              Next Bill Date
+            </p>
             <p className="text-lg font-semibold text-gray-800 mt-1">
               {new Date(data.nextBillDate).toLocaleDateString("en-GB")}
             </p>
           </div>
 
-          {/* Status */}
+          {/* STATUS */}
           <div className="bg-gray-50 rounded-xl p-5 flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Membership Status</p>
+              <p className="text-sm text-gray-500">
+                Membership Status
+              </p>
               <p className="text-lg font-semibold text-gray-800 mt-1">
                 {status}
               </p>
@@ -130,7 +163,7 @@ export default function Memberdetail() {
             />
           </div>
 
-          {/* Address (FULL WIDTH) */}
+          {/* ADDRESS */}
           <div className="sm:col-span-2 bg-gray-50 rounded-xl p-5">
             <p className="text-sm text-gray-500">Address</p>
             <p className="text-base font-medium text-gray-800 mt-1 leading-relaxed">
@@ -139,10 +172,10 @@ export default function Memberdetail() {
           </div>
         </div>
 
-        {/* Actions */}
+        {/* ACTIONS */}
         <div className="p-8 border-t">
           <button
-            onClick={() => setRenew(!renew)}
+            onClick={() => setRenew((prev) => !prev)}
             className="px-6 py-3 rounded-xl bg-black text-white hover:bg-gray-800 transition"
           >
             Renew Membership

@@ -8,9 +8,12 @@ import Member from "./Pages/member/Member";
 import GeneralUser from "./Pages/GeneralUser/Generaluser";
 import Memberdetail from "./Pages/MemberDetail/Memberdetail";
 
+// Layout
+import ProtectedLayout from "./layouts/ProtectedLayout";
+
 import "react-toastify/dist/ReactToastify.css";
 
-/* 🔐 Protected Route Component */
+/* 🔐 Protected Route */
 function ProtectedRoute({ children }) {
   const isLoggedIn = localStorage.getItem("isLogin") === "true";
   return isLoggedIn ? children : <Navigate to="/" replace />;
@@ -19,47 +22,24 @@ function ProtectedRoute({ children }) {
 function App() {
   return (
     <Routes>
-      {/* Public Route */}
+      {/* ================= PUBLIC ================= */}
       <Route path="/" element={<Home />} />
 
-      {/* Protected Routes */}
+      {/* ================= PROTECTED ================= */}
       <Route
-        path="/dashboard"
         element={
           <ProtectedRoute>
-            <Dashboard />
+            <ProtectedLayout />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/Member" element={<Member />} />
+        <Route path="/specific/:page" element={<GeneralUser />} />
+        <Route path="/member/:id" element={<Memberdetail />} />
+      </Route>
 
-      <Route
-        path="/Member"
-        element={
-          <ProtectedRoute>
-            <Member />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/specific/:page"
-        element={
-          <ProtectedRoute>
-            <GeneralUser />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/member/:id"
-        element={
-          <ProtectedRoute>
-            <Memberdetail />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* Fallback */}
+      {/* ================= FALLBACK ================= */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

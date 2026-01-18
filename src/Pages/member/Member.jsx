@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import Sidebar from "../../components/sidebar/Sidebar.jsx";
 import MemberCard from "../../components/memberCard/MemberCard.jsx";
 import Modal from "../../components/modal/Modal.jsx";
 import Addmembership from "../../components/Addmembership/Addmembership.jsx";
@@ -15,11 +14,11 @@ import api from "../../api/axios";
 import { toast, ToastContainer } from "react-toastify";
 
 export default function Member() {
-  // 🔹 Modal states
+  /* ================= MODAL STATES ================= */
   const [addMembership, setAddmembership] = useState(false);
   const [addMember, setAddmember] = useState(false);
 
-  // 🔹 Pagination & data
+  /* ================= PAGINATION & DATA ================= */
   const [currentPage, setCurrentpage] = useState(1);
   const [totalData, setTotalData] = useState(0);
   const [limit] = useState(9);
@@ -27,7 +26,10 @@ export default function Member() {
   const [data, setData] = useState([]);
   const [skip, setSkip] = useState(0);
 
-  // 🔹 UI states
+  /* ================= SEARCH ================= */
+  const [searchTerm, setSearchTerm] = useState("");
+
+  /* ================= UI ================= */
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -48,13 +50,12 @@ export default function Member() {
       setNoOfPage(pages);
     } catch (err) {
       toast.error("Technical Error");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  /* =========================
-     PAGINATION HANDLERS
-  ========================= */
+  /* ================= PAGINATION HANDLERS ================= */
   const handlePrev = () => {
     if (currentPage > 1) {
       const newPage = currentPage - 1;
@@ -75,133 +76,159 @@ export default function Member() {
     }
   };
 
-  // 🔹 Count calculation
+  /* ================= SEARCH FILTER ================= */
+  const filteredMembers = data.filter((member) => {
+    const name = member.name?.toLowerCase() || "";
+    const mobile = member.mobileNo?.toString() || "";
+
+    return (
+      name.includes(searchTerm.toLowerCase()) ||
+      mobile.includes(searchTerm)
+    );
+  });
+
+  /* ================= COUNT ================= */
   const startCount = totalData === 0 ? 0 : skip + 1;
-  const endCount = skip + data.length;
+  const endCount = skip + filteredMembers.length;
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div className="hidden md:block w-64">
-        <Sidebar />
-      </div>
+    <div className="p-6 sm:p-8 lg:p-12 bg-gray-50 min-h-full">
+      {/* ================= HEADER ================= */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-10">
+        <div className="flex items-center gap-4">
+          <Link
+            to="/dashboard"
+            className="flex items-center gap-2 text-gray-500 hover:text-black transition"
+          >
+            <ChevronLeftIcon />
+            Back
+          </Link>
 
-      {/* Main Content */}
-      <main className="flex-1 p-6 sm:p-8 lg:p-12 overflow-auto">
-        {/* ================= HEADER ================= */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-10">
-          <div className="flex items-center gap-4">
-            <Link
-              to="/dashboard"
-              className="flex items-center gap-2 text-gray-500 hover:text-black transition"
-            >
-              <ChevronLeftIcon /> Back
-            </Link>
-            <h1 className="text-3xl lg:text-4xl font-semibold text-gray-800">
-              Members
-            </h1>
-          </div>
-
-          <div className="flex flex-wrap gap-3">
-            <button
-              onClick={() => setAddmember(true)}
-              className="flex items-center gap-2 px-5 py-2.5 bg-black text-white rounded-xl hover:bg-gray-800 transition"
-            >
-              <AddIcon /> Add Member
-            </button>
-
-            <button
-              onClick={() => setAddmembership(true)}
-              className="flex items-center gap-2 px-5 py-2.5 bg-black text-white rounded-xl hover:bg-gray-800 transition"
-            >
-              <AddIcon /> Add Membership
-            </button>
-          </div>
+          <h1 className="text-3xl lg:text-4xl font-semibold text-gray-800">
+            Members
+          </h1>
         </div>
 
-        {/* ================= MEMBERS CARD ================= */}
-        <section className="bg-white rounded-3xl shadow-sm p-6 sm:p-8">
-          {loading ? (
-            <div className="text-center py-24 text-gray-500">Loading…</div>
-          ) : data.length === 0 ? (
-            <div className="text-center py-24 text-gray-500">
-              No Members Found
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={() => setAddmember(true)}
+            className="flex items-center gap-2 px-5 py-2.5 bg-black text-white rounded-xl hover:bg-gray-800 transition"
+          >
+            <AddIcon />
+            Add Member
+          </button>
+
+          <button
+            onClick={() => setAddmembership(true)}
+            className="flex items-center gap-2 px-5 py-2.5 bg-black text-white rounded-xl hover:bg-gray-800 transition"
+          >
+            <AddIcon />
+            Add Membership
+          </button>
+        </div>
+      </div>
+
+      {/* ================= SEARCH BAR ================= */}
+      <div className="mb-6 flex justify-center">
+        <input
+          type="text"
+          placeholder="Search by name or mobile number..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="
+            w-full sm:w-1/2
+            px-4 py-2
+            border rounded-xl
+            focus:outline-none focus:ring-2 focus:ring-black
+            text-gray-800
+          "
+        />
+      </div>
+
+      {/* ================= MEMBERS LIST ================= */}
+      <section className="bg-white rounded-3xl shadow-sm p-6 sm:p-8">
+        {loading ? (
+          <div className="text-center py-24 text-gray-500">
+            Loading…
+          </div>
+        ) : filteredMembers.length === 0 ? (
+          <div className="text-center py-24 text-gray-500">
+            No matching members found
+          </div>
+        ) : (
+          <>
+            {/* GRID */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredMembers.map((member) => (
+                <MemberCard key={member._id} item={member} />
+              ))}
             </div>
-          ) : (
-            <>
-              {/* Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {data.map((member) => (
-                  <MemberCard key={member._id} item={member} />
-                ))}
+
+            {/* COUNT INFO */}
+            <div className="mt-8 text-center text-sm text-gray-600">
+              Showing{" "}
+              <span className="font-semibold text-gray-800">
+                {startCount}
+              </span>{" "}
+              –{" "}
+              <span className="font-semibold text-gray-800">
+                {endCount}
+              </span>{" "}
+              of{" "}
+              <span className="font-semibold text-gray-800">
+                {totalData}
+              </span>{" "}
+              members
+            </div>
+
+            {/* PAGINATION */}
+            {noOfPage > 1 && (
+              <div className="mt-6 flex items-center justify-center gap-6">
+                <button
+                  onClick={handlePrev}
+                  disabled={currentPage === 1}
+                  className="p-2.5 rounded-lg border hover:bg-gray-100 transition disabled:opacity-40"
+                >
+                  <ChevronLeftIcon />
+                </button>
+
+                <span className="text-sm font-medium text-gray-700">
+                  Page {currentPage} of {noOfPage}
+                </span>
+
+                <button
+                  onClick={handleNext}
+                  disabled={currentPage === noOfPage}
+                  className="p-2.5 rounded-lg border hover:bg-gray-100 transition disabled:opacity-40"
+                >
+                  <ChevronRightIcon />
+                </button>
               </div>
-
-              {/* Count Info */}
-              <div className="mt-8 text-center text-sm text-gray-600">
-                Showing{" "}
-                <span className="font-semibold text-gray-800">
-                  {startCount}
-                </span>{" "}
-                –{" "}
-                <span className="font-semibold text-gray-800">
-                  {endCount}
-                </span>{" "}
-                of{" "}
-                <span className="font-semibold text-gray-800">
-                  {totalData}
-                </span>{" "}
-                members
-              </div>
-
-              {/* Pagination */}
-              {noOfPage > 1 && (
-                <div className="mt-6 flex items-center justify-center gap-6">
-                  <button
-                    onClick={handlePrev}
-                    disabled={currentPage === 1}
-                    className="p-2.5 rounded-lg border hover:bg-gray-100 transition disabled:opacity-40"
-                  >
-                    <ChevronLeftIcon />
-                  </button>
-
-                  <span className="text-sm font-medium text-gray-700">
-                    Page {currentPage} of {noOfPage}
-                  </span>
-
-                  <button
-                    onClick={handleNext}
-                    disabled={currentPage === noOfPage}
-                    className="p-2.5 rounded-lg border hover:bg-gray-100 transition disabled:opacity-40"
-                  >
-                    <ChevronRightIcon />
-                  </button>
-                </div>
-              )}
-            </>
-          )}
-        </section>
-
-        <ToastContainer />
-
-        {/* ================= MODALS ================= */}
-        {addMember && (
-          <Modal
-            header="Add Member"
-            handleClose={() => setAddmember(false)}
-            content={<AddMembers onSuccess={() => fetchData(skip, limit)} />}
-          />
+            )}
+          </>
         )}
+      </section>
 
-        {addMembership && (
-          <Modal
-            header="Add Membership"
-            handleClose={() => setAddmembership(false)}
-            content={
-              <Addmembership handleClose={() => setAddmembership(false)} />
-            }
-          />
-        )}
-      </main>
+      <ToastContainer />
+
+      {/* ================= MODALS ================= */}
+      {addMember && (
+        <Modal
+          header="Add Member"
+          handleClose={() => setAddmember(false)}
+          content={<AddMembers onSuccess={() => fetchData(skip, limit)} />}
+        />
+      )}
+
+      {addMembership && (
+        <Modal
+          header="Add Membership"
+          handleClose={() => setAddmembership(false)}
+          content={
+            <Addmembership handleClose={() => setAddmembership(false)} />
+          }
+        />
+      )}
     </div>
   );
 }

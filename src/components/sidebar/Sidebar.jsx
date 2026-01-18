@@ -20,9 +20,7 @@ export default function Sidebar() {
   );
   const [loading, setLoading] = useState(false);
 
-  /* =========================
-     GREETING LOGIC
-  ========================= */
+  /* ================= GREETING ================= */
   useEffect(() => {
     const hour = new Date().getHours();
     if (hour < 12) setGreeting("Good Morning");
@@ -31,20 +29,13 @@ export default function Sidebar() {
     else setGreeting("Good Night");
   }, []);
 
-  /* =========================
-     LOGOUT
-  ========================= */
+  /* ================= LOGOUT ================= */
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("gymName");
-    localStorage.removeItem("gymPic");
-    localStorage.removeItem("isLogin");
+    localStorage.clear();
     navigate("/");
   };
 
-  /* =========================
-     PROFILE IMAGE UPLOAD
-  ========================= */
+  /* ================= PROFILE IMAGE UPLOAD ================= */
   const uploadImage = async (event) => {
     if (!event.target.files[0]) return;
 
@@ -71,7 +62,6 @@ export default function Sidebar() {
       setProfilePic(result.secure_url);
       toast.success("Profile updated");
     } catch (err) {
-      console.error(err);
       toast.error("Upload failed");
     } finally {
       setLoading(false);
@@ -86,14 +76,14 @@ export default function Sidebar() {
   return (
     <aside
       className="
-        fixed top-0 left-0 bottom-0
-        w-full sm:w-64
+        h-screen
         flex flex-col
         bg-gradient-to-b from-black via-zinc-900 to-black
-        border-r border-white/10 shadow-xl
-        text-white p-4 sm:p-6
-        backdrop-blur-2xl
-        z-40
+        border-r border-white/10
+        shadow-xl
+        text-white
+        p-4 sm:p-6
+        overflow-hidden
       "
     >
       {/* ================= HEADER ================= */}
@@ -127,7 +117,7 @@ export default function Sidebar() {
           </label>
         </div>
 
-        <h1 className="text-xl sm:text-2xl font-bold text-center">
+        <h1 className="text-xl sm:text-2xl font-bold text-center truncate max-w-full">
           {localStorage.getItem("gymName")}
         </h1>
 
@@ -137,7 +127,7 @@ export default function Sidebar() {
       <div className="h-px bg-white/10 my-6"></div>
 
       {/* ================= NAV ================= */}
-      <nav className="flex flex-col gap-3 flex-1 overflow-y-auto">
+      <nav className="flex flex-col gap-3 flex-1 overflow-y-auto pr-1">
         {navItems.map((item) => {
           const active = location.pathname === item.to;
 

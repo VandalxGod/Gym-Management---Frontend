@@ -3,13 +3,17 @@ import api from "../../api/axios";
 import { toast, ToastContainer } from "react-toastify";
 
 export default function Addmembership({ handleClose }) {
-  const [InputField, setInputField] = useState({ months: "", price: "" });
+  const [InputField, setInputField] = useState({
+    months: "",
+    price: "",
+  });
   const [membership, setMembership] = useState([]);
 
   const handleOnChange = (event, name) => {
     setInputField({ ...InputField, [name]: event.target.value });
   };
 
+  /* ================= FETCH MEMBERSHIP ================= */
   const fetchMembership = async () => {
     try {
       const res = await api.get("/plans/get-membership");
@@ -25,6 +29,7 @@ export default function Addmembership({ handleClose }) {
     fetchMembership();
   }, []);
 
+  /* ================= ADD MEMBERSHIP ================= */
   const handleAddmembership = async () => {
     try {
       const res = await api.post("/plans/add-membership", InputField);
@@ -37,28 +42,49 @@ export default function Addmembership({ handleClose }) {
   };
 
   return (
-    <div className="text-black p-4">
-      {/* Membership Cards */}
-      <div className="flex flex-wrap gap-4 items-center justify-center">
+    <div className="text-black p-4 sm:p-6 md:p-8 max-h-[85vh] overflow-y-auto pb-12">
+      {/* ================= MEMBERSHIP CARDS ================= */}
+      <div className="flex flex-wrap gap-6 items-stretch justify-center">
         {membership.map((item, index) => (
           <div
             key={index}
-            className="text-lg bg-zinc-900 text-white border-2 px-4 py-3 flex flex-col gap-2 rounded-xl font-semibold hover:bg-white hover:text-black w-full sm:w-[200px] text-center"
+            className="
+              text-base sm:text-lg
+              bg-zinc-900 text-white
+              border-2
+              px-5 py-4
+              flex flex-col gap-2
+              rounded-2xl font-semibold
+              hover:bg-white hover:text-black
+              w-full sm:w-[220px]
+              min-h-[110px]
+              text-center
+              break-words
+            "
           >
-            <div>{item.months} Months Membership</div>
-            <div>Rs {item.price}</div>
+            <div className="leading-snug">
+              {item.months} Months Membership
+            </div>
+            <div className="leading-snug">
+              Rs {item.price}
+            </div>
           </div>
         ))}
       </div>
 
       <hr className="my-10" />
 
-      {/* Add Membership Form */}
-      <div className="flex flex-col md:flex-row gap-5 items-center justify-center mb-10">
+      {/* ================= ADD MEMBERSHIP FORM ================= */}
+      <div className="flex flex-col md:flex-row gap-6 items-stretch md:items-end justify-center mb-18">
         <input
           value={InputField.months}
           onChange={(e) => handleOnChange(e, "months")}
-          className="border-2 rounded-lg text-lg w-full md:w-1/3 p-2"
+          className="
+            border-2 rounded-xl
+            text-base sm:text-lg
+            w-full md:w-1/3
+            px-4 py-3
+          "
           type="number"
           placeholder="Add No. of Months"
         />
@@ -66,14 +92,28 @@ export default function Addmembership({ handleClose }) {
         <input
           value={InputField.price}
           onChange={(e) => handleOnChange(e, "price")}
-          className="border-2 rounded-lg text-lg w-full md:w-1/3 p-2"
+          className="
+            border-2 rounded-xl
+            text-base sm:text-lg
+            w-full md:w-1/3
+            px-4 py-3
+          "
           type="number"
           placeholder="Add Price"
         />
 
         <div
           onClick={handleAddmembership}
-          className="text-lg border-2 bg-black text-white px-6 py-2 rounded-xl cursor-pointer hover:bg-white hover:text-black"
+          className="
+            text-base sm:text-lg
+            border-2 bg-black text-white
+            px-8 py-3
+            rounded-xl
+            cursor-pointer
+            hover:bg-white hover:text-black
+            text-center
+            w-full md:w-auto
+          "
         >
           Add +
         </div>

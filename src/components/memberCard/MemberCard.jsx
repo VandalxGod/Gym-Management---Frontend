@@ -14,38 +14,46 @@ export default function MemberCard({ item }) {
     <Link
       to={`/member/${item._id}`}
       className="
-        bg-white rounded-xl p-3
+        bg-white rounded-2xl
+        px-4 py-5
         hover:bg-zinc-900 hover:text-white
-        cursor-pointer transition-all duration-300
+        cursor-pointer
+        transition-all duration-300
         flex flex-col items-center
-        w-full sm:w-[220px]
+        w-full
+        h-full
+        shadow-sm hover:shadow-lg
       "
     >
-      {/* Profile Image */}
-      <div className="w-24 h-24 sm:w-28 sm:h-28 flex justify-center relative items-center border-2 p-1 mx-auto rounded-full">
-        <img
-          className="w-full h-full rounded-full object-cover"
-          src={item.profilePic || "https://via.placeholder.com/150"}
-          alt="profile pic"
-        />
+      {/* ================= PROFILE IMAGE ================= */}
+      <div className="relative w-24 h-24 sm:w-28 sm:h-28 mb-4">
+        <div className="w-full h-full border-2 rounded-full p-1 flex items-center justify-center">
+          <img
+            className="w-full h-full rounded-full object-cover"
+            src={item.profilePic || "https://via.placeholder.com/150"}
+            alt="profile pic"
+          />
+        </div>
+
+        {/* Status Indicator */}
         <CircleIcon
           className="absolute top-1 left-1"
           sx={{ color: item.status === "Active" ? "greenyellow" : "red" }}
         />
       </div>
 
-      {/* Name */}
-      <div className="mt-4 text-center text-lg font-semibold font-mono">
+      {/* ================= NAME ================= */}
+      <div className="text-center text-base sm:text-lg font-semibold font-mono leading-tight">
         {item.name || "Unnamed Member"}
       </div>
 
-      {/* Mobile */}
-      <div className="mt-1 text-center text-base sm:text-lg font-mono">
+      {/* ================= MOBILE ================= */}
+      <div className="mt-1 text-center text-sm sm:text-base font-mono opacity-90">
         {item.mobileNo ? `+91 ${item.mobileNo}` : "No Mobile"}
       </div>
 
-      {/* Next Bill Date */}
-      <div className="mt-1 text-center text-sm sm:text-base font-mono">
+      {/* ================= NEXT BILL DATE ================= */}
+      <div className="mt-2 text-center text-xs sm:text-sm font-mono opacity-80">
         Next Bill Date: {formattedDate}
       </div>
     </Link>

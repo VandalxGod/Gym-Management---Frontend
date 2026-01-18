@@ -49,31 +49,52 @@ export default function Footer() {
     .join("   ✦   ");
 
   return (
-    <footer className="w-full bg-white border-t shadow-inner py-2 sm:py-4 
-                       overflow-hidden relative h-[44px] sm:h-[48px] 
-                       flex items-center">
-
+    <footer
+      className="
+        w-full
+        bg-white
+        border-t
+        shadow-inner
+        overflow-hidden
+        relative
+        min-h-[44px]
+        sm:min-h-[48px]
+        flex items-center
+      "
+    >
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-r from-white via-[#f9f9f9] to-white opacity-90"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-white via-[#f9f9f9] to-white opacity-90" />
 
       {/* Layer 1 */}
       <div
-        className="absolute whitespace-nowrap text-gray-800 
-                   text-xs sm:text-sm font-medium
-                   animate-superSmoothSlow
-                   bg-clip-text text-transparent 
-                   bg-gradient-to-r from-black to-gray-600"
+        className="
+          absolute
+          whitespace-nowrap
+          text-gray-800
+          text-xs sm:text-sm
+          font-medium
+          animate-superSmoothSlow
+          bg-clip-text text-transparent
+          bg-gradient-to-r from-black to-gray-600
+          px-4
+        "
       >
         {marqueeText}
       </div>
 
       {/* Layer 2 */}
       <div
-        className="absolute whitespace-nowrap text-gray-800 
-                   text-xs sm:text-sm font-medium
-                   animate-superSmoothSlow2
-                   bg-clip-text text-transparent 
-                   bg-gradient-to-r from-black to-gray-600"
+        className="
+          absolute
+          whitespace-nowrap
+          text-gray-800
+          text-xs sm:text-sm
+          font-medium
+          animate-superSmoothSlow2
+          bg-clip-text text-transparent
+          bg-gradient-to-r from-black to-gray-600
+          px-4
+        "
       >
         {marqueeText}
       </div>
