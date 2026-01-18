@@ -77,6 +77,7 @@ export default function Sidebar({ onClose }) {
     <aside
       className="
         h-screen
+        w-full
         flex flex-col
         bg-gradient-to-b from-black via-zinc-900 to-black
         border-r border-white/10
@@ -87,7 +88,7 @@ export default function Sidebar({ onClose }) {
         relative
       "
     >
-      {/* ===== MOBILE CLOSE BUTTON ===== */}
+      {/* ================= MOBILE CLOSE BUTTON ================= */}
       <button
         onClick={onClose}
         className="
