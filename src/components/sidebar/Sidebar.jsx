@@ -5,12 +5,13 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import GroupIcon from "@mui/icons-material/Group";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
 // api + toast
 import api from "../../api/axios";
 import { toast } from "react-toastify";
 
-export default function Sidebar() {
+export default function Sidebar({ onClose }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -40,7 +41,6 @@ export default function Sidebar() {
     if (!event.target.files[0]) return;
 
     setLoading(true);
-
     const data = new FormData();
     data.append("file", event.target.files[0]);
     data.append("upload_preset", "gym-management");
@@ -61,7 +61,7 @@ export default function Sidebar() {
       localStorage.setItem("gymPic", result.secure_url);
       setProfilePic(result.secure_url);
       toast.success("Profile updated");
-    } catch (err) {
+    } catch {
       toast.error("Upload failed");
     } finally {
       setLoading(false);
@@ -84,10 +84,29 @@ export default function Sidebar() {
         text-white
         p-4 sm:p-6
         overflow-hidden
+        relative
       "
     >
+      {/* ===== MOBILE CLOSE BUTTON ===== */}
+      <button
+        onClick={onClose}
+        className="
+          absolute top-4 right-4
+          sm:hidden
+          w-9 h-9
+          flex items-center justify-center
+          rounded-full
+          bg-black
+          hover:bg-gray-600
+          transition
+        "
+        aria-label="Close Sidebar"
+      >
+        <ChevronLeftIcon />
+      </button>
+
       {/* ================= HEADER ================= */}
-      <div className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-4 mt-6 sm:mt-0">
         <div className="relative group">
           <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden shadow-2xl">
             <img
@@ -135,6 +154,7 @@ export default function Sidebar() {
             <Link
               key={item.to}
               to={item.to}
+              onClick={onClose} // auto-close on mobile
               className={`flex items-center gap-4 px-4 py-3 rounded-xl transition
                 ${
                   active
